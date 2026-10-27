@@ -29,7 +29,7 @@
       <div class="marquee"><div>✦ BEM-VINDO À WEB ZONE 2000 ✦ MSN, ICQ, LAN HOUSE, DISCMAN, ORKUT, TAMAGOTCHI, MTV, LOCADORA E MUITO MAIS ✦ CLIQUE, EXPLORE E NÃO ESQUEÇA DE SALVAR NOS FAVORITOS ✦</div></div>
     </header>
     <nav class="main-nav" aria-label="Navegação principal">
-      <a href="#inicio">🏠 HOME</a><a href="#radio">📻 RÁDIO</a><a href="#timeline">📅 LINHA DO TEMPO</a><a href="#arquivo-web">🗃 ARQUIVO WEB</a><a href="#geek">👾 GEEK ZONE</a><a href="#memorias">📼 MEMÓRIAS</a><a href="#galeria">🖼 GALERIA</a><a href="#guestbook">✍️ GUESTBOOK</a>
+      <a href="#inicio">🏠 HOME</a><a href="#radio">📻 RÁDIO</a><a href="#chat-room">💬 SALA DE CHAT</a><a href="#timeline">📅 LINHA DO TEMPO</a><a href="#arquivo-web">🗃 ARQUIVO WEB</a><a href="#geek">👾 GEEK ZONE</a><a href="#memorias">📼 MEMÓRIAS</a><a href="#galeria">🖼 GALERIA</a><a href="#guestbook">✍️ GUESTBOOK</a>
     </nav>
     <div class="banner-strip" aria-label="Banners retrô de 88 por 31 pixels">
       <a class="banner88 banner-blue" href="#radio">♪ MP3 INSIDE</a><a class="banner88 banner-green" href="#geek">GAMER ZONE</a><a class="banner88 banner-pink" href="#memorias">MSN FOREVER</a><a class="banner88 banner-yellow" href="#galeria">Y2K WEB</a><a class="banner88 banner-purple" href="#timeline">BEST VIEWED 800×600</a><a class="banner88 banner-red" href="#guestbook">SIGN MY GUESTBOOK</a>
@@ -37,7 +37,7 @@
     <div class="content-grid" id="inicio">
       <aside class="sidebar">
         <section class="panel"><h2 class="panel-title">📁 NAVEGUE</h2><div class="panel-body nav-list"><a href="#noticias">📰 Notícias históricas</a><a href="#timeline">🕒 Linha do tempo</a><a href="#tecnologia">💻 Tecnologia</a><a href="#cultura">🎧 Cultura pop</a><a href="#jogos">🎮 Games</a><a href="#noticias">🇧🇷 Brasil & mundo</a><a href="#guestbook">📖 Livro de visitas</a></div></section>
-        <section class="panel"><h2 class="panel-title">🖥️ STATUS DO SISTEMA</h2><div class="panel-body system-status"><div><span class="led"></span> Conexão: <b id="connection-status">desconectado</b></div><div>Velocidade: <b>56 kbps</b></div><div>Navegador: <b>IE 6.0</b></div><div>Resolução: <b>800 × 600</b></div><button id="connect-btn" class="retro-button">Conectar à internet</button><p class="micro">♪ *som imaginário de modem discado*</p></div></section>
+        <section class="panel"><h2 class="panel-title">🖥️ STATUS DO SISTEMA</h2><div class="panel-body system-status"><div><span class="led"></span> Conexão: <b id="connection-status">desconectado</b></div><div>Velocidade: <b>56 kbps</b></div><div>Navegador: <b>IE 6.0</b></div><div>Resolução: <b>800 × 600</b></div><button id="connect-btn" class="retro-button">Conectar à internet</button><p class="micro">♪ gravação real de modem discado.</p></div></section>
         <section class="panel"><h2 class="panel-title">🎲 FATO ALEATÓRIO</h2><div class="panel-body"><p id="random-fact">Em 1999, muita gente temia que o bug do milênio apagasse os computadores.</p><button id="fact-btn" class="retro-button">Outro fato!</button></div></section>
         <section class="panel mini-panel"><h2 class="panel-title">💌 CARTÃO POSTAL</h2><div class="panel-body postcard"><div class="postcard-stamp">SAUDADE<br>★ 2000 ★</div><p>Você se lembra de esperar a página carregar linha por linha?</p><span>Abraços da internet antiga!</span></div></section>
         <div class="counter-box">VOCÊ É O VISITANTE Nº<br><strong id="visitor-count">000184</strong><br><span>desde 01/01/2000</span></div>
@@ -58,14 +58,31 @@
               <div class="winamp-controls">
                 <div class="winamp-transport"><button id="radio-prev" title="Anterior">|◀</button><button id="radio-play" title="Play / Pause">▶</button><button id="radio-next" title="Próxima estação">▶|</button><button id="radio-stop" title="Parar">■</button></div>
                 <label for="radio-station">PLAYLIST / ESTAÇÃO</label>
-                <select id="radio-station"><option value="vapor">Vaporwave FM · endless mix</option><option value="nineties">90s Alternative & Dance</option><option value="two-thousands">2000s Pop, Emo & Rock</option><option value="games">Game Boy · PS1 · N64 · PC</option><option value="br">Brasil · MTV · Lan house</option></select>
+                <select id="radio-station"><option value="vapor">SomaFM Vaporwaves · vaporwave real</option><option value="nineties">Flashback · hits 90/2000</option><option value="two-thousands">Flashback · pop/rock 2000</option><option value="games">SomaFM cliqhop · eletrônica</option><option value="br">Brasil Hits Rock · clássicos</option></select>
                 <div class="winamp-volume"><span>VOL</span><input id="radio-volume" type="range" min="0" max="100" value="42" aria-label="Volume da rádio"><span id="radio-volume-value">42%</span></div>
               </div>
               <div class="winamp-status"><span id="radio-status">READY · 56K FRIENDLY</span><span>WEB ZONE FM</span></div>
             </div>
-            <div class="radio-quickbar"><button id="radio-sound-toggle" class="retro-button">🔊 Efeitos: ligados</button><button id="radio-classics" class="retro-button">🎵 Buscar clássicos 90/2000</button><a class="retro-button radio-external" href="https://www.brasilhits.com/flashback" target="_blank" rel="noopener noreferrer">📻 Rádio Flashback 90/2000 ↗</a><a class="retro-button radio-external" href="https://somafm.com/vaporwaves/" target="_blank" rel="noopener noreferrer">🌴 Vaporwaves ao vivo ↗</a><span class="micro">O mix contínuo é original e gerado localmente. Para hits comerciais e rádios licenciadas, use as estações oficiais.</span></div>
-            <div id="radio-playlist" class="radio-playlist" aria-label="Programação da rádio"></div>
-            <div id="radio-player" class="radio-player"><div class="radio-placeholder">♫ WEB ZONE FM ESTÁ NO AR<br><small>Vaporwave, synthwave, chiptune e rádio ambiente original. Clique em PLAY para começar.</small></div></div>
+            <div class="radio-quickbar"><button id="radio-sound-toggle" class="retro-button">🔊 Efeitos: ligados</button><span class="micro">Transmissões musicais reais e contínuas, dentro desta página. O navegador pode exigir um clique para liberar o som.</span></div>
+            <div id="radio-player" class="radio-player">
+              <audio id="radio-audio" preload="none" controls aria-label="Rádio vaporwave ao vivo"></audio>
+              <iframe id="radio-embed" title="Rádio Flashback ao vivo" src="about:blank" loading="lazy" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+              <div id="radio-player-note" class="radio-placeholder">♫ WEB ZONE FM<br><small>Escolha uma estação e aperte PLAY. Vaporwave e hits de época tocam aqui dentro.</small></div>
+            </div>
+          </div>
+        </section>
+        <section class="panel" id="chat-room">
+          <h2 class="panel-title">💬 SALA DE BATE-PAPO · #NOSTALGIA</h2>
+          <div class="panel-body room-body">
+            <div class="room-toolbar"><span>🟢 5 pessoas na sala</span><label for="room-nick">Seu nick <input id="room-nick" maxlength="20" value="visitante_2000"></label></div>
+            <div id="room-log" class="room-log" aria-live="polite">
+              <p class="room-system">*** Bem-vindo à #nostalgia. Não esqueça de dar oi! ***</p>
+              <p><b>pixel_girl:</b> alguém ainda tem o ICQ instalado? 🌼</p>
+              <p><b>lan_master:</b> hoje tem CS 1.6 depois das 22h</p>
+              <p><b>Neo_1999:</b> esperando o download do Winamp terminar...</p>
+            </div>
+            <form id="room-form" class="room-form"><input id="room-input" maxlength="240" required placeholder="Digite sua mensagem..." aria-label="Mensagem na sala"><button>Enviar</button><button type="button" id="room-nudge">📳 Zumbido</button></form>
+            <p class="micro">Sala demonstrativa local: mensagens e participantes são simulados. Para conversar com outros visitantes em tempo real, é necessário um backend.</p>
           </div>
         </section>
         <section class="panel" id="noticias"><h2 class="panel-title">📰 NOTÍCIAS QUE MUDARAM O MUNDO</h2><div class="panel-body"><div class="filter-row"><label for="news-filter">Categoria:</label><select id="news-filter"><option value="all">Todas</option><option value="world">Mundo</option><option value="tech">Tecnologia</option><option value="br">Brasil</option><option value="pop">Cultura pop</option></select><label for="year-filter">Década:</label><select id="year-filter"><option value="all">Todas</option><option value="90">Anos 90</option><option value="00">Anos 2000</option></select></div><div id="news-grid" class="news-grid"></div><p class="micro">Conteúdo histórico resumido. Cada cartão abre detalhes e fontes para continuar a pesquisa.</p></div></section>
@@ -132,11 +149,21 @@
           <a href="https://commons.wikimedia.org/wiki/Category:Anime" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1578632767115-3517cd0cce49?auto=format&fit=crop&w=500&q=80" alt="Arte de anime"><span>Anime & mangá</span></a>
         </div><p class="micro">As imagens são carregadas de serviços externos. Os links levam a categorias de referência para aprofundar a pesquisa.</p></div></section>
       </main>
+        <section class="panel full-guestbook" id="guestbook">
+          <h2 class="panel-title">📖 LIVRO DE VISITAS · ASSINE AQUI!</h2>
+          <div class="panel-body guestbook-body">
+            <p>Deixe seu nick, um recado e uma lembrança para quem chegar depois. Como nos bons tempos da web pessoal.</p>
+            <form id="guestbook-form"><label>Seu nome <input id="guest-name" maxlength="28" required placeholder="Seu nick"></label><label>Recado <textarea id="guest-message" maxlength="220" required placeholder="Saudades do ICQ..."></textarea></label><button class="retro-button">✍️ Assinar o livro de visitas</button></form>
+            <div id="guestbook-entries" class="guestbook-entries"></div>
+            <p class="micro">Os recados ficam salvos neste navegador. Para compartilhar entre visitantes, é necessário conectar um banco de dados.</p>
+          </div>
+        </section>
       <aside class="sidebar right-sidebar">
         <section class="panel status-panel"><h2 class="panel-title">📟 MEU STATUS</h2><div class="panel-body status-editor"><label for="mood-select">Status Messenger</label><select id="mood-select"><option>ouvindo música 🎧</option><option>no ICQ 🟢</option><option>baixando MP3 💿</option><option>jogando CS 🎮</option><option>sumido(a) por aí 🌙</option></select><label for="nickname">Seu nick</label><input id="nickname" maxlength="20" value="visitante_2000"><button id="save-profile" class="retro-button">Atualizar status</button><p id="profile-preview" class="profile-preview">visitante_2000 está ouvindo música 🎧</p></div></section>
+        <section class="panel mood-panel" id="meu-humor"><h2 class="panel-title">😎 MEU HUMOR</h2><div class="panel-body"><p id="mood-caption">Humor atual: <b>nostálgico</b></p><div class="mood-buttons"><button type="button" data-humor="nostálgico">📼 Nostálgico</button><button type="button" data-humor="offline">🌙 Offline</button><button type="button" data-humor="geek">👾 Geek</button><button type="button" data-humor="caótico">💿 Caótico</button></div><p class="micro">Atualize seu humor, como nos velhos perfis.</p></div></section>
         <section class="panel" id="jogos"><h2 class="panel-title">🎮 ARCADE DA WEB</h2><div class="panel-body"><p>Teste seus reflexos no minigame mais simples da história.</p><div id="reaction-game" class="reaction-game"><span>Clique em INICIAR e aguarde o verde.</span></div><button id="game-start" class="retro-button">Iniciar jogo</button><p id="game-result" class="micro">Recorde salvo neste navegador.</p></div></section>
         <section class="panel"><h2 class="panel-title">🔗 WEBRING</h2><div class="panel-body webring"><p>Você está no <b>Retro Web Ring</b>.</p><button id="ring-prev">◀ Anterior</button><button id="ring-next">Próximo ▶</button><p id="ring-label">Site 01 de 05: Nostalgia Digital</p></div></section>
-        <section class="panel" id="guestbook"><h2 class="panel-title">📨 RECADINHO</h2><div class="panel-body"><p>Tem uma lembrança boa dessa época?</p><button data-open="guestbook-window" class="retro-button">Deixar um recado</button><button data-open="secret-window" class="retro-button">Não clique aqui</button></div></section>
+        <section class="panel"><h2 class="panel-title">📨 RECADINHO</h2><div class="panel-body"><p>Deixe uma mensagem no livro de visitas!</p><a class="retro-button" href="#guestbook">✍️ Ir ao guestbook</a><button data-open="secret-window" class="retro-button">Não clique aqui</button></div></section>
         <div class="web-badges"><div class="fake-badge">🌐<br>BEST VIEWED<br>IN IE 6</div><div class="fake-badge hot">🔥<br>HOT SITE<br>2003</div><div class="fake-badge">💾<br>100% HTML<br>ENERGY</div><div class="fake-badge rainbow">🌈<br>UNDER<br>CONSTRUCTION</div></div>
       </aside>
     </div>
@@ -155,7 +182,7 @@
       <p class="micro icq-foot">UIN: 1042000 · Simulação local. As mensagens não saem deste navegador.</p>
     </section>
     <section class="floating-window hidden" id="profile-window" role="dialog" aria-label="Meu perfil"><div class="floating-title" data-drag="profile-window"><span>👤 Meu espaço pessoal</span><button data-close="profile-window">×</button></div><div class="profile-window-body"><div class="avatar">😎</div><h2>Meu perfil da web</h2><p>♪ música atual: <span id="profile-music">qualquer MP3 de 4 MB</span></p><p>Frase: “a vida é feita de pixels”</p><p>Amigos: 127 · Recados: 24 · Depoimentos: 8</p><button id="change-avatar">Trocar avatar</button></div></section>
-    <section class="floating-window hidden" id="guestbook-window" role="dialog" aria-label="Livro de visitas"><div class="floating-title" data-drag="guestbook-window"><span>✍️ Livro de visitas</span><button data-close="guestbook-window">×</button></div><div class="guestbook-body"><p>Deixe um recado para o próximo visitante.</p><form id="guestbook-form"><label>Seu nome <input id="guest-name" maxlength="28" required placeholder="Seu nick"></label><label>Recado <textarea id="guest-message" maxlength="220" required placeholder="Saudades do ICQ..."></textarea></label><button>Assinar guestbook</button></form><div id="guestbook-entries"></div><p class="micro">Os recados ficam apenas neste navegador.</p></div></section>
+    
     <section class="floating-window hidden" id="secret-window" role="dialog" aria-label="Página secreta"><div class="floating-title" data-drag="secret-window"><span>🔒 Área secreta</span><button data-close="secret-window">×</button></div><div class="secret-body"><h2>VOCÊ ACHOU!</h2><pre>  (\_/)
   (o.o)  <3
   (> <)  segredo desbloqueado!</pre><p>Você desbloqueou a página secreta. Sua recompensa é uma dose extra de nostalgia.</p><button id="secret-confetti">Fazer festa</button></div></section>
