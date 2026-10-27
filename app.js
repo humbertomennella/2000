@@ -417,7 +417,7 @@
   radioAudio.addEventListener("error",()=>{if(!radioAudio.hidden)toast("A transmissão não respondeu. Tente outra estação.")});
   $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
-  tuneRadio(false);
+  tuneRadio(true);
   setInterval(()=>{if(radioPlaying){const seconds=Math.floor((Date.now()-radioStartedAt+radioElapsed)/1000);$("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");$("#radio-progress").style.width=(seconds%60/60*100)+"%";$$("#radio-spectrum i").forEach(bar=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"))}},1000);
 
 
@@ -470,7 +470,7 @@
     }
   });
   msnChatObserver.observe($("#chat-log"),{childList:true});
-  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
+  $$(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
