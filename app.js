@@ -239,7 +239,7 @@
   $("#nickname").addEventListener("keydown", e => { if (e.key === "Enter") updateProfile(); });
   updateProfile();
 
-  const windows = $(".floating-window");
+  const windows = $$(".floating-window");
   const taskbarApps = $("#taskbar-apps"), startMenu = $("#start-menu"), startButton = $("#start-button");
   const windowIcons = {"browser-window":"🌐","chat-room-window":"💬","messenger-window":"🟢","icq-window":"🌼","profile-window":"👤","secret-window":"🔒"};
   function renderTaskbar() {
