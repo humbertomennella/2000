@@ -145,6 +145,7 @@
     if (status.textContent === "conectado") {
       status.textContent = "desconectado"; $(".led").style.background = "#f00"; button.textContent = "Conectar à internet"; toast("Conexão encerrada. Pode liberar a linha telefônica.");
     } else {
+      dialupSound();
       status.textContent = "discando..."; button.disabled = true;
       setTimeout(() => { status.textContent = "conectado"; $(".led").style.background = "#0a0"; button.disabled = false; button.textContent = "Desconectar"; toast("Conectado a 56 kbps. Não atenda o telefone!"); }, 1800);
     }
@@ -446,10 +447,14 @@
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04);});
   $("#radio-classics").addEventListener("click",()=>{const query=classicSearches.map(([song,artist])=>song+" "+artist+" official audio").join(" OR ");window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query),"webzone-classics","noopener");toast("Busca de músicas clássicas aberta em outra aba.");});
   renderRadioPlaylist();
+  setInterval(()=>{
+    if(!radioPlaying)return;
+    const seconds=Math.floor((Date.now()-radioStart)/1000);
+    $("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+    $("#radio-progress").style.width=(seconds%60/60*100)+"%";
+  },1000);
 
   // Som de modem no botão conectar, além dos alertas de mensageiro.
-  const originalConnect=$("#connect-btn");
-  originalConnect.addEventListener("click",()=>{if($("#connection-status").textContent==="discando...")return;dialupSound();});
   document.addEventListener("click",e=>{if(e.target.closest(".retro-button,.quick-links button,.memory-card button,.culture-list button,.decade-switch button"))blip(520+Math.random()*260,.045,.025);});
 
   // MSN sounds, distinct ICQ client and local simulated chat.
