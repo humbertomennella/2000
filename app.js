@@ -424,7 +424,7 @@
   document.addEventListener("pointerdown",e=>{
     if(e.target.closest("#radio")||radioPlaying||!radioWantsPlayback||!radioAudio.paused||!radioAudio.src)return;
     radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>{});
-  },{once:true});
+  });
   setInterval(()=>{if(radioPlaying){const seconds=Math.floor((Date.now()-radioStartedAt+radioElapsed)/1000);$("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");$("#radio-progress").style.width=(seconds%60/60*100)+"%";$$("#radio-spectrum i").forEach(bar=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"))}},1000);
 
 
