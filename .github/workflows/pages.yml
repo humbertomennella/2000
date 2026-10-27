@@ -31,16 +31,14 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser interaction tests
         run: node tests/browser-smoke.mjs
+      - name: Remove temporary test dependencies
+        run: rm -rf node_modules package.json package-lock.json
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            index.html
-            app.js
-            styles.css
-            assets/
+          path: "."
   deploy:
     environment:
       name: github-pages
