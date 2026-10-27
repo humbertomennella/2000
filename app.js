@@ -453,7 +453,7 @@
   },1000);
 
   // Som de modem no botão conectar, além dos alertas de mensageiro.
-  document.addEventListener("click",e=>{if(e.target.closest(".retro-button,.quick-links button,.memory-card button,.culture-list button,.decade-switch button"))blip(520+Math.random()*260,.045,.025);});
+  document.addEventListener("click",e=>{if(!e.target.closest("#connect-btn")&&e.target.closest(".retro-button,.quick-links button,.memory-card button,.culture-list button,.decade-switch button"))blip(520+Math.random()*260,.045,.025);});
 
   // MSN sounds, distinct ICQ client and local simulated chat.
   const msnSkinButtons=$$("[data-messenger-skin]");
