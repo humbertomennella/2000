@@ -325,77 +325,160 @@
 
 
 
-  // Rádio Web Zone FM: o áudio só começa após clique explícito do visitante.
-  const radioTracks = {
-    mix: [
-      {title:"...Baby One More Time",artist:"Britney Spears",year:1998,era:"TEEN POP",id:"C-u5WLJ9Yk4"},
-      {title:"All Star",artist:"Smash Mouth",year:1999,era:"POP ROCK",id:"L_jWHffIx5E"},
-      {title:"Blue (Da Ba Dee)",artist:"Eiffel 65",year:1998,era:"EURODANCE",id:"zA52uNzx7Y4"},
-      {title:"Complicated",artist:"Avril Lavigne",year:2002,era:"POP PUNK",id:"5NPBIwQyPWE"},
-      {title:"In the End",artist:"Linkin Park",year:2000,era:"NU METAL",id:"eVTXPUF4Oz4"},
-      {title:"Clint Eastwood",artist:"Gorillaz",year:2001,era:"ALTERNATIVE",id:"1V_xRb0x9aw"}
-    ],
-    rock: [
-      {title:"In the End",artist:"Linkin Park",year:2000,era:"NU METAL",id:"eVTXPUF4Oz4"},
-      {title:"Complicated",artist:"Avril Lavigne",year:2002,era:"POP PUNK",id:"5NPBIwQyPWE"},
-      {title:"All Star",artist:"Smash Mouth",year:1999,era:"POP ROCK",id:"L_jWHffIx5E"}
-    ],
-    games: [
-      {title:"Super Mario 64 · soundtrack",artist:"Nintendo 64 era",year:1996,era:"GAME SOUNDTRACK",id:"NNv2RHR62Rs"},
-      {title:"Zelda: Ocarina of Time · soundtrack",artist:"Nintendo 64 era",year:1998,era:"GAME SOUNDTRACK",id:"CKA1zCwcYBE"},
-      {title:"Megalovania · Undertale",artist:"Toby Fox",year:2000,era:"BONUS RETRO GAME",id:"wDgQdr8ZkTw"}
-    ],
-    br: [
-      {title:"Anna Júlia",artist:"Los Hermanos",year:1999,era:"ROCK BRASILEIRO",id:"umMI7oB5s5Y"},
-      {title:"Dias Atrás",artist:"CPM 22",year:2000,era:"ROCK BRASILEIRO",id:"9dsUVU7Z9yU"},
-      {title:"Só por uma Noite",artist:"Charlie Brown Jr.",year:2001,era:"SKATE ROCK",id:"mS4H6B7c8xY"}
-    ]
+  // Rádio local contínua: Web Audio, sem depender de vídeos externos.
+  const radioGenres = {
+    vapor:{label:"VAPORWAVE FM · 1987 AFTER HOURS",tempo:76,scale:[0,3,5,7,10],wave:"triangle",filter:1050,delay:.34},
+    nineties:{label:"90s ALT / DANCE · NIGHT DRIVE",tempo:112,scale:[0,2,4,7,9],wave:"sawtooth",filter:1800,delay:.16},
+    "two-thousands":{label:"2000s POP / EMO / ROCK",tempo:124,scale:[0,3,5,7,10],wave:"square",filter:2200,delay:.12},
+    games:{label:"8-BIT / PS1 / N64 / PC",tempo:138,scale:[0,2,5,7,9],wave:"square",filter:2600,delay:.08},
+    br:{label:"BRASIL · MTV / LAN HOUSE / MP3",tempo:108,scale:[0,2,4,7,9],wave:"triangle",filter:1500,delay:.2}
   };
-  let radioList = radioTracks.mix;
-  let radioIndex = -1;
-  const radioPlaylist = $("#radio-playlist");
-  function renderRadioPlaylist() {
-    radioPlaylist.replaceChildren();
-    radioList.forEach((track,index) => {
-      const button = document.createElement("button");
-      button.className = "radio-track" + (index === radioIndex ? " active" : "");
-      button.type = "button";
-      const title = document.createElement("strong"); title.textContent = track.title;
-      const meta = document.createElement("span"); meta.textContent = track.artist + " · " + track.year;
-      button.append(title,meta);
-      button.addEventListener("click", () => tuneRadio(index));
-      radioPlaylist.append(button);
+  let audioContext=null, masterGain=null, radioPlaying=false, soundEnabled=true, radioTimer=null, radioStep=0, radioStart=0, radioElapsed=0, radioGenre="vapor";
+  let activeNodes=[];
+  const classicSearches = [
+    ["Everybody (Backstreet's Back)","Backstreet Boys"],["...Baby One More Time","Britney Spears"],["Blue (Da Ba Dee)","Eiffel 65"],["In the End","Linkin Park"],["Complicated","Avril Lavigne"],["Clint Eastwood","Gorillaz"],["Anna Júlia","Los Hermanos"],["Dias Atrás","CPM 22"],["Around the World","Daft Punk"],["Resonance","HOME vaporwave"]
+  ];
+  function initAudio(){
+    if(audioContext) return;
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx){toast("Este navegador não oferece Web Audio.");return;}
+    audioContext=new Ctx(); masterGain=audioContext.createGain(); masterGain.gain.value=Number($("#radio-volume").value)/100*.24; masterGain.connect(audioContext.destination);
+  }
+  function note(freq,duration,when,opts={}){
+    if(!audioContext||!masterGain) return;
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain(), filter=audioContext.createBiquadFilter();
+    osc.type=opts.wave||"triangle"; osc.frequency.setValueAtTime(freq,when);
+    filter.type="lowpass"; filter.frequency.setValueAtTime(opts.filter||1300,when);
+    gain.gain.setValueAtTime(.0001,when); gain.gain.exponentialRampToValueAtTime(opts.volume||.075,when+.025); gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(when); osc.stop(when+duration+.04);
+    activeNodes.push(osc);
+  }
+  function blip(freq=880,duration=.09,volume=.08){
+    initAudio(); if(!audioContext||!soundEnabled) return; audioContext.resume();
+    const now=audioContext.currentTime; note(freq,duration,now,{wave:"sine",volume,filter:3500});
+  }
+  function noiseBurst(duration=.24,volume=.05,when=null){
+    if(!audioContext||!masterGain) return;
+    const length=Math.max(1,Math.floor(audioContext.sampleRate*duration)), buffer=audioContext.createBuffer(1,length,audioContext.sampleRate), data=buffer.getChannelData(0);
+    for(let i=0;i<length;i++) data[i]=(Math.random()*2-1)*(1-i/length);
+    const src=audioContext.createBufferSource(), gain=audioContext.createGain(), filter=audioContext.createBiquadFilter(), startAt=when??audioContext.currentTime;
+    src.buffer=buffer; filter.type="bandpass"; filter.frequency.value=1500; filter.Q.value=.7; gain.gain.value=volume;
+    src.connect(filter);filter.connect(gain);gain.connect(masterGain);src.start(startAt);
+  }
+  function dialupSound(){
+    initAudio(); if(!audioContext||!soundEnabled) return; audioContext.resume();
+    const start=audioContext.currentTime;
+    note(425,.35,start,{wave:"sine",volume:.12,filter:1800});
+    [697,770,697,770,697,770].forEach((f,i)=>note(f,.075,start+.45+i*.105,{wave:"sine",volume:.055,filter:2200}));
+    note(425,.5,start+1.25,{wave:"sine",volume:.1,filter:1800});
+    for(let i=0;i<13;i++){
+      const t=start+1.9+i*.16;
+      note(430+Math.random()*1700,.14,t,{wave:i%3===0?"sawtooth":"sine",volume:.035+Math.random()*.025,filter:1200+Math.random()*2200});
+      if(i%2===0) note(900+Math.random()*1300,.1,t+.05,{wave:"triangle",volume:.025,filter:2500});
+      noiseBurst(.1,.018,t);
+    }
+    note(880,.12,start+4.1,{wave:"sine",volume:.06,filter:3000});
+  }
+  function radioStepFn(){
+    if(!radioPlaying||!audioContext) return;
+    const g=radioGenres[radioGenre], now=audioContext.currentTime, beat=60/g.tempo;
+    const root=radioGenre==="vapor"?110:radioGenre==="games"?164.81:130.81;
+    const scale=g.scale;
+    const step=radioStep++;
+    const chordRoot=root*(step%16<8?1:Math.pow(2,2/12));
+    if(step%4===0){
+      note(chordRoot,beat*3.5,now,{wave:"sine",volume:.035,filter:g.filter});
+      note(chordRoot*1.5,beat*3.1,now,{wave:g.wave,volume:.019,filter:g.filter});
+    }
+    const degree=scale[(step*3+Math.floor(step/7))%scale.length], octave=(step%8===6?2:1);
+    note(root*Math.pow(2,degree/12)*octave,beat*.72,now,{wave:g.wave,volume:radioGenre==="vapor"?.035:.025,filter:g.filter});
+    if(step%2===0) note(root*.5,beat*.6,now,{wave:"sine",volume:.06,filter:500});
+    if(step%4===2){noiseBurst(.07,.012,now);note(root*4,.035,now,{wave:"square",volume:.012,filter:4000});}
+    if(radioGenre==="vapor"&&step%8===0){
+      note(root*2,beat*7,now,{wave:"sine",volume:.014,filter:700});
+      note(root*2.01,beat*7,now,{wave:"triangle",volume:.012,filter:850});
+    }
+    const bars=$$("#radio-spectrum i");
+    bars.forEach((bar,i)=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"));
+    $("#radio-live-state").textContent="PLAY";
+    $("#radio-status").textContent="PLAYING · "+g.label;
+    $("#radio-track-title").textContent=g.label;
+    $("#radio-track-era").textContent="GENERATIVE MIX · SEM FIM · FAIXA "+String(Math.floor(step/32)+1).padStart(2,"0");
+    radioTimer=setTimeout(radioStepFn,beat*1000);
+  }
+  function startRadio(){
+    initAudio(); if(!audioContext)return; audioContext.resume();
+    radioPlaying=true;radioStart=Date.now()-radioElapsed;$("#radio-play").textContent="Ⅱ";$("#radio-player").classList.add("is-playing");
+    if(radioTimer)clearTimeout(radioTimer);radioStepFn();blip(660,.1,.045);
+  }
+  function pauseRadio(){
+    radioPlaying=false;if(radioTimer)clearTimeout(radioTimer);radioElapsed=Date.now()-radioStart;
+    $("#radio-live-state").textContent="PAUSE";$("#radio-play").textContent="▶";$("#radio-status").textContent="PAUSED · RETRO MIX";$("#radio-player").classList.remove("is-playing");
+  }
+  function stopRadio(){
+    pauseRadio();radioElapsed=0;radioStep=0;$("#radio-live-state").textContent="STOP";$("#radio-track-title").textContent="WEB ZONE RADIO";$("#radio-track-era").textContent="Escolha sua estação e aperte PLAY";$("#radio-status").textContent="STOPPED · 56K FRIENDLY";$("#radio-player").classList.remove("is-playing");blip(260,.11,.04);
+  }
+  function renderRadioPlaylist(){
+    const list=$("#radio-playlist");list.replaceChildren();
+    const tracks={
+      vapor:[["Mallsoft / shopping mall","Vaporwave"],["Late night Windows 98","Vaporwave"],["Aqua blue dream","Synthwave"]],
+      nineties:[["Nirvana · Smells Like Teen Spirit","1991"],["The Prodigy · Firestarter","1996"],["Eiffel 65 · Blue","1998"]],
+      "two-thousands":[["Linkin Park · In the End","2000"],["Avril Lavigne · Complicated","2002"],["Gorillaz · Feel Good Inc.","2005"]],
+      games:[["Super Mario 64","Nintendo 64"],["The Sims Build Mode","PC"],["Need for Speed: Underground","PS2 / PC"]],
+      br:[["Los Hermanos · Anna Júlia","1999"],["CPM 22 · Dias Atrás","2000"],["Charlie Brown Jr. · Só por uma Noite","2001"]]
+    }[radioGenre]||[];
+    tracks.forEach(([title,meta])=>{
+      const a=document.createElement("a");a.className="radio-track";a.href="https://www.youtube.com/results?search_query="+encodeURIComponent(title+" "+meta+" official audio");a.target="_blank";a.rel="noopener noreferrer";
+      const strong=document.createElement("strong");strong.textContent=title;const span=document.createElement("span");span.textContent=meta+" · buscar faixa original ↗";a.append(strong,span);list.append(a);
     });
   }
-  function tuneRadio(index) {
-    if (!radioList.length) return;
-    radioIndex = (index + radioList.length) % radioList.length;
-    const track = radioList[radioIndex];
-    $("#radio-track-title").textContent = track.title + " — " + track.artist;
-    $("#radio-track-era").textContent = track.year + " · " + track.era;
-    $("#radio-play").textContent = "♫ Tocando seleção";
-    const frame = document.createElement("iframe");
-    frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(track.id) + "?autoplay=1&rel=0";
-    frame.title = "Player de música: " + track.title;
-    frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-    frame.referrerPolicy = "strict-origin-when-cross-origin";
-    frame.allowFullscreen = true;
-    const player = $("#radio-player"); player.replaceChildren(frame);
-    renderRadioPlaylist();
-  }
-  $("#radio-station").addEventListener("change", () => {
-    radioList = radioTracks[$("#radio-station").value] || radioTracks.mix;
-    radioIndex = -1;
-    $("#radio-track-title").textContent = "Estação pronta para sintonizar";
-    $("#radio-track-era").textContent = $("#radio-station").selectedOptions[0].textContent.toUpperCase();
-    $("#radio-play").textContent = "▶ Sintonizar";
-    $("#radio-player").innerHTML = '<div class="radio-placeholder">♫ Estação selecionada.<br><small>Escolha uma faixa para começar a ouvir.</small></div>';
-    renderRadioPlaylist();
+  $("#radio-station").addEventListener("change",()=>{
+    radioGenre=$("#radio-station").value;radioStep=0;
+    const g=radioGenres[radioGenre];$("#radio-track-title").textContent=g.label;$("#radio-track-era").textContent="STATION READY · ORIGINAL CONTINUOUS MIX";
+    $("#radio-status").textContent="TUNED · "+g.label;renderRadioPlaylist();blip(740,.08,.035);
+    if(radioPlaying){pauseRadio();startRadio();}
   });
-  $("#radio-play").addEventListener("click", () => tuneRadio(radioIndex < 0 ? 0 : radioIndex));
-  $("#radio-next").addEventListener("click", () => tuneRadio(radioIndex + 1));
-  $("#radio-prev").addEventListener("click", () => tuneRadio(radioIndex < 0 ? 0 : radioIndex - 1));
+  $("#radio-play").addEventListener("click",()=>radioPlaying?pauseRadio():startRadio());
+  $("#radio-stop").addEventListener("click",stopRadio);
+  $("#radio-next").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
+  $("#radio-prev").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+$("#radio-station").options.length-1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
+  $("#radio-volume").addEventListener("input",e=>{const value=Number(e.target.value);$("#radio-volume-value").textContent=value+"%";if(masterGain)masterGain.gain.setTargetAtTime(value/100*.24,audioContext.currentTime,.04);});
+  $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04);});
+  $("#radio-classics").addEventListener("click",()=>{const query=classicSearches.map(([song,artist])=>song+" "+artist+" official audio").join(" OR ");window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query),"webzone-classics","noopener");toast("Busca de músicas clássicas aberta em outra aba.");});
   renderRadioPlaylist();
+
+  // Som de modem no botão conectar, além dos alertas de mensageiro.
+  const originalConnect=$("#connect-btn");
+  originalConnect.addEventListener("click",()=>{if($("#connection-status").textContent==="discando...")return;dialupSound();});
+  document.addEventListener("click",e=>{if(e.target.closest(".retro-button,.quick-links button,.memory-card button,.culture-list button,.decade-switch button"))blip(520+Math.random()*260,.045,.025);});
+
+  // MSN sounds, distinct ICQ client and local simulated chat.
+  const msnSkinButtons=$$("[data-messenger-skin]");
+  msnSkinButtons.forEach(button=>button.addEventListener("click",()=>{
+    const skin=button.dataset.messengerSkin;
+    msnSkinButtons.forEach(b=>b.classList.toggle("active",b===button));
+    $("#messenger-window").classList.toggle("icq-mode",skin==="icq");
+    $(".floating-title span",$("#messenger-window")).textContent=skin==="icq"?"🌼 ICQ-style chat":"💬 MSN Messenger 7.5";
+    blip(skin==="icq"?1040:660,.12,.055);
+  }));
+  $$("#messenger-window [data-contact]").forEach(button=>button.addEventListener("click",()=>blip(730,.07,.04)));
+  $("#chat-form").addEventListener("submit",()=>blip(880,.07,.04));
+  let icqContact="Neo_1999";
+  const icqLog=$("#icq-chat-log");
+  const icqReplies=["Uh-oh! You are online!","BRB, my download is at 93%.","Have you seen the new Winamp skin?","Meet me in the IRC channel later.","My connection just dropped. Again.","lol :D"];
+  $$("[data-icq-contact]").forEach(button=>button.addEventListener("click",()=>{
+    icqContact=button.dataset.icqContact;$("#icq-chat-title").textContent="Chat with "+icqContact;
+    const p=document.createElement("p"),b=document.createElement("b");b.textContent="System: ";p.append(b,document.createTextNode("Conversation with "+icqContact+" started."));icqLog.append(p);icqLog.scrollTop=icqLog.scrollHeight;blip(740,.08,.045);
+  }));
+  $("#icq-chat-form").addEventListener("submit",e=>{
+    e.preventDefault();const input=$("#icq-chat-input"),message=input.value.trim();if(!message)return;
+    const p=document.createElement("p"),b=document.createElement("b");b.textContent="You: ";p.append(b,document.createTextNode(message));icqLog.append(p);input.value="";icqLog.scrollTop=icqLog.scrollHeight;blip(880,.07,.045);
+    setTimeout(()=>{const reply=document.createElement("p"),bold=document.createElement("b");bold.textContent=icqContact+": ";reply.append(bold,document.createTextNode(icqReplies[Math.floor(Math.random()*icqReplies.length)]));icqLog.append(reply);icqLog.scrollTop=icqLog.scrollHeight;blip(1040,.11,.055);toast("💬 "+icqContact+" enviou uma mensagem.");},700+Math.random()*1100);
+  });
+  $("#icq-status").addEventListener("click",e=>{const states=["🟢 Available","🌙 Away","⛔ Do not disturb","🔴 Invisible"];const current=states.indexOf(e.currentTarget.textContent);e.currentTarget.textContent=states[(current+1)%states.length];blip(600,.08,.04);});
+  $("#icq-add-contact").addEventListener("click",()=>toast("UIN de exemplo: 1042000. Esta lista é uma simulação local."));
+  $("#icq-sound-test").addEventListener("click",()=>{initAudio();if(soundEnabled){blip(1180,.09,.08);setTimeout(()=>blip(880,.13,.08),120);}});
+  $$(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const id=win.id;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
