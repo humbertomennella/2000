@@ -197,15 +197,15 @@
 
   const profileKey = "webzone-profile";
   const savedProfile = storage.get(profileKey, null);
-  if (savedProfile) { $("#nickname").value = savedProfile.name; $("#mood-select").value = savedProfile.mood; }
+  if (savedProfile) { $("#nickname").value = savedProfile.name; $("#profile-status").value = savedProfile.mood; }
   function updateProfile() {
     const name = $("#nickname").value.trim().slice(0, 20) || "visitante_2000";
-    const mood = $("#mood-select").value;
+    const mood = $("#profile-status").value;
     $("#nickname").value = name;
     $("#profile-preview").textContent = name + " está " + mood;
     storage.set(profileKey, {name, mood});
   }
-  $("#save-profile").addEventListener("click", () => { updateProfile(); toast("Status atualizado. Seus amigos podem fingir que viram."); });
+  $("#save-profile").addEventListener("click", () => { updateProfile(); toast("Status do Messenger atualizado."); });
   $("#nickname").addEventListener("keydown", e => { if (e.key === "Enter") updateProfile(); });
   updateProfile();
 
@@ -311,7 +311,6 @@
 
   const chatLog = $("#chat-log");
   let activeContact = "Bia_xD";
-  const replies = ["kkkkkkkk", "lembra daquela música?", "peraí que vou mandar no subnick", "to aqui sim, minha internet caiu antes 😂", "entra no Orkut depois", "me chama quando acabar o download"];
   $$("[data-contact]").forEach(button => button.addEventListener("click", () => {
     activeContact = button.dataset.contact;
     const p = document.createElement("p"); p.innerHTML = "<b>Sistema:</b> Conversa iniciada com " + activeContact + ".";
@@ -322,9 +321,6 @@
     const input = $("#chat-input"), message = input.value.trim();
     if (!message) return;
     const own = document.createElement("p"); const b = document.createElement("b"); b.textContent = "Você: "; own.append(b, document.createTextNode(message)); chatLog.append(own); input.value = ""; chatLog.scrollTop = chatLog.scrollHeight;
-    setTimeout(() => {
-      const reply = document.createElement("p"); const bold = document.createElement("b"); bold.textContent = activeContact + ": "; reply.append(bold, document.createTextNode(replies[Math.floor(Math.random() * replies.length)])); chatLog.append(reply); chatLog.scrollTop = chatLog.scrollHeight;
-    }, 600 + Math.random() * 900);
   });
 
   $("#change-avatar").addEventListener("click", () => {
@@ -404,7 +400,7 @@
       radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;setRadioPlaying(false);
     }
   }
-  $("#radio-station").addEventListener("change",()=>{radioGenre=$("#radio-station").value;radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(false);blip(740,.08,.035)});
+  $("#radio-station").addEventListener("change",()=>{const resume=radioPlaying||(!radioAudio.paused&&!radioAudio.ended);radioGenre=$("#radio-station").value;radioElapsed=0;radioStartedAt=Date.now();$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(resume);blip(740,.08,.035)});
   $("#radio-play").addEventListener("click",()=>{
     const station=radioStations[radioGenre];
     if(station.type==="embed"){radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;toast("Use PLAY dentro do player da rádio incorporada.");return}
@@ -426,39 +422,34 @@
 
   // Sala #nostalgia: chat demonstrativo local e zumbido estilo MSN.
   const roomLog=$("#room-log");
-  const roomReplies=[["pixel_girl","meu primeiro nick era cheio de x e corações 💜"],["lan_master","alguém traz o CD do Counter-Strike 1.6"],["Neo_1999","o download travou em 99% de novo..."],["Bia_xD","mandem o subnick mais dramático de vocês 😂"],["R4v3n","ICQ > qualquer mensageiro moderno 🌼"]];
   function roomAppend(name,message,system=false){const p=document.createElement("p");if(system)p.className="room-system";const b=document.createElement("b");b.textContent=system?"*** ":name+": ";p.append(b,document.createTextNode(message));roomLog.append(p);roomLog.scrollTop=roomLog.scrollHeight}
-  $("#room-form").addEventListener("submit",e=>{e.preventDefault();const input=$("#room-input"),message=input.value.trim();if(!message)return;const nick=($("#room-nick").value.trim()||"visitante_2000").slice(0,20);roomAppend(nick,message);input.value="";blip(880,.07,.045);setTimeout(()=>{const [name,reply]=roomReplies[Math.floor(Math.random()*roomReplies.length)];roomAppend(name,reply);if(soundEnabled)blip(1040,.11,.055)},900+Math.random()*1400)});
+  $("#room-form").addEventListener("submit",e=>{e.preventDefault();const input=$("#room-input"),message=input.value.trim();if(!message)return;const nick=($("#room-nick").value.trim()||"visitante_2000").slice(0,20);roomAppend(nick,message);input.value="";blip(880,.07,.045)});
   $("#room-nudge").addEventListener("click",()=>{roomLog.classList.remove("room-nudge");void roomLog.offsetWidth;roomLog.classList.add("room-nudge");if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260)}roomAppend("Sistema",($("#room-nick").value.trim()||"visitante_2000")+" mandou um ZUMBIDO!",true);toast("Bzzzt! Zumbido na sala de demonstração.");setTimeout(()=>roomLog.classList.remove("room-nudge"),650)});
-  $("[data-humor]").forEach(button=>button.addEventListener("click",()=>{const mood=button.dataset.humor;$("#mood-caption").innerHTML="Humor atual: <b>"+mood+"</b>";$("[data-humor]").forEach(b=>b.classList.toggle("active",b===button));storage.set("webzone-mood",mood);blip(640,.08,.04)}));
-  const savedMood=storage.get("webzone-mood","nostálgico");$("#mood-caption").innerHTML="Humor atual: <b>"+savedMood+"</b>";$("[data-humor]").forEach(b=>b.classList.toggle("active",b.dataset.humor===savedMood));
-
-  // MSN sounds, distinct ICQ client and local simulated chat.
-  const msnSkinButtons=$$("[data-messenger-skin]");
-  msnSkinButtons.forEach(button=>button.addEventListener("click",()=>{
-    const skin=button.dataset.messengerSkin;
-    msnSkinButtons.forEach(b=>b.classList.toggle("active",b===button));
-    $("#messenger-window").classList.toggle("icq-mode",skin==="icq");
-    $(".floating-title span",$("#messenger-window")).textContent=skin==="icq"?"🌼 ICQ-style chat":"💬 MSN Messenger 7.5";
-    blip(skin==="icq"?1040:660,.12,.055);
-  }));
+  const moodKey="webzone-mood-original";
+  const savedMood=storage.get(moodKey,{face:"ツ",label:"ツ"});
+  $("#mood-select").value=savedMood.label;
+  $("#mood-face").textContent=savedMood.face;
+  $("#mood-select").addEventListener("change",()=>{$("#mood-face").textContent=$("#mood-select").value;});
+  $("#mood-save").addEventListener("click",()=>{
+    const face=$("#mood-select").value;
+    storage.set(moodKey,{face,label:face});
+    $("#mood-face").textContent=face;
+    toast("Seu humor foi atualizado na homepage!");
+    blip(660,.08,.04);
+  });
   $$("#messenger-window [data-contact]").forEach(button=>button.addEventListener("click",()=>blip(730,.07,.04)));
   $("#chat-form").addEventListener("submit",()=>blip(880,.07,.04));
   let icqContact="Neo_1999";
   const icqLog=$("#icq-chat-log");
-  const icqReplies=["Uh-oh! You are online!","BRB, my download is at 93%.","Have you seen the new Winamp skin?","Meet me in the IRC channel later.","My connection just dropped. Again.","lol :D"];
-  $$("[data-icq-contact]").forEach(button=>button.addEventListener("click",()=>{
-    icqContact=button.dataset.icqContact;$("#icq-chat-title").textContent="Chat with "+icqContact;
-    const p=document.createElement("p"),b=document.createElement("b");b.textContent="System: ";p.append(b,document.createTextNode("Conversation with "+icqContact+" started."));icqLog.append(p);icqLog.scrollTop=icqLog.scrollHeight;blip(740,.08,.045);
-  }));
+  $(".icq-contact-list").addEventListener("click",e=>{const button=e.target.closest("[data-icq-contact]");if(!button)return;icqContact=button.dataset.icqContact;$("#icq-chat-title").textContent="Chat with "+icqContact;const p=document.createElement("p"),b=document.createElement("b");b.textContent="System: ";p.append(b,document.createTextNode("Conversation with "+icqContact+" selected."));icqLog.append(p);icqLog.scrollTop=icqLog.scrollHeight;blip(740,.08,.045);});
   $("#icq-chat-form").addEventListener("submit",e=>{
     e.preventDefault();const input=$("#icq-chat-input"),message=input.value.trim();if(!message)return;
     const p=document.createElement("p"),b=document.createElement("b");b.textContent="You: ";p.append(b,document.createTextNode(message));icqLog.append(p);input.value="";icqLog.scrollTop=icqLog.scrollHeight;blip(880,.07,.045);
-    setTimeout(()=>{const reply=document.createElement("p"),bold=document.createElement("b");bold.textContent=icqContact+": ";reply.append(bold,document.createTextNode(icqReplies[Math.floor(Math.random()*icqReplies.length)]));icqLog.append(reply);icqLog.scrollTop=icqLog.scrollHeight;blip(1040,.11,.055);toast("💬 "+icqContact+" enviou uma mensagem.");},700+Math.random()*1100);
   });
   $("#icq-status").addEventListener("click",e=>{const states=["🟢 Available","🌙 Away","⛔ Do not disturb","🔴 Invisible"];const current=states.indexOf(e.currentTarget.textContent);e.currentTarget.textContent=states[(current+1)%states.length];blip(600,.08,.04);});
-  $("#icq-add-contact").addEventListener("click",()=>toast("UIN de exemplo: 1042000. Esta lista é uma simulação local."));
-  $("#icq-sound-test").addEventListener("click",()=>{initAudio();if(soundEnabled){blip(1180,.09,.08);setTimeout(()=>blip(880,.13,.08),120);}});
+  $("#icq-add-contact").addEventListener("click",()=>{const name=window.prompt("Nick do novo contato ICQ:");if(!name||!name.trim())return;const nick=name.trim().slice(0,24);if($("[data-icq-contact]").some(button=>button.dataset.icqContact.toLowerCase()===nick.toLowerCase())){toast("Esse contato já está na lista.");return;}const button=document.createElement("button");button.dataset.icqContact=nick;button.textContent="🟢 "+nick;const small=document.createElement("small");small.textContent="added just now";button.append(small);$(".icq-contact-list").append(button);toast(nick+" foi adicionado à lista ICQ.");});
+  $("#icq-sound-test").addEventListener("click",()=>{initAudio();if(soundEnabled){blip(1180,.09,.08);setTimeout(()=>blip(880,.13,.08),120);}else toast("Os efeitos sonoros estão desligados.");});
+  $("#icq-nudge").addEventListener("click",()=>{const win=$("#icq-window");win.classList.remove("nudge-shake");void win.offsetWidth;win.classList.add("nudge-shake");if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260);}toast("📳 Zumbido enviado na janela ICQ.");setTimeout(()=>win.classList.remove("nudge-shake"),650);});
   $("#msn-nudge").addEventListener("click",()=>{
     const win=$("#messenger-window");win.classList.remove("nudge-shake");void win.offsetWidth;win.classList.add("nudge-shake");
     initAudio();if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260);}
