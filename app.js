@@ -330,7 +330,7 @@
     $(".avatar").textContent = next; toast("Avatar atualizado. Perfil digno de 2004.");
   });
 
-  const guestKey = "webzone-guestbook";
+  const guestKey = "webzone_guests";
   function renderGuestbook() {
     const entries = storage.get(guestKey, []);
     const container = $("#guestbook-entries"); container.replaceChildren();
@@ -339,16 +339,18 @@
       const name = document.createElement("b"); name.textContent = entry.name + " escreveu:";
       const p = document.createElement("p"); p.textContent = entry.message;
       const date = document.createElement("small"); date.textContent = entry.date;
-      div.append(name, p, date); container.append(div);
+      div.append(name, p, date);
+      if(entry.url){const link=document.createElement("a");link.href=entry.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent=entry.url;link.className="guest-homepage";div.append(link);}
+      container.append(div);
     });
   }
   $("#guestbook-form").addEventListener("submit", e => {
     e.preventDefault();
-    const name = $("#guest-name").value.trim(), message = $("#guest-message").value.trim();
+    const name = $("#guest-name").value.trim(), url = $("#guest-url").value.trim(), message = $("#guest-message").value.trim();
     if (!name || !message) return;
     const entries = storage.get(guestKey, []);
-    entries.push({name:name.slice(0,28),message:message.slice(0,220),date:new Date().toLocaleString("pt-BR")});
-    storage.set(guestKey, entries.slice(-30)); $("#guest-message").value = ""; renderGuestbook(); toast("Recado salvo neste navegador!");
+    entries.push({name:name.slice(0,30),url:url.slice(0,100),message:message.slice(0,300),date:new Date().toLocaleDateString("pt-BR")});
+    storage.set(guestKey, entries.slice(-30)); $("#guestbook-form").reset(); renderGuestbook(); toast("Sua assinatura foi registrada neste navegador!");
   });
   renderGuestbook();
 
@@ -420,6 +422,24 @@
   setInterval(()=>{if(radioPlaying){const seconds=Math.floor((Date.now()-radioStartedAt+radioElapsed)/1000);$("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");$("#radio-progress").style.width=(seconds%60/60*100)+"%";$$("#radio-spectrum i").forEach(bar=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"))}},1000);
 
 
+  // Sala flutuante no estilo original: mensagens locais sem bots nem respostas fabricadas.
+  const windowRoomLog=$("#window-room-log");
+  function appendWindowRoomMessage(nick,message,system=false){
+    const p=document.createElement("p");if(system)p.className="room-system";
+    const b=document.createElement("b");b.textContent=system?"*** ":nick+": ";
+    p.append(b,document.createTextNode(message));windowRoomLog.append(p);windowRoomLog.scrollTop=windowRoomLog.scrollHeight;
+  }
+  $("#window-room-form").addEventListener("submit",e=>{
+    e.preventDefault();const input=$("#window-room-input"),message=input.value.trim();if(!message)return;
+    appendWindowRoomMessage(($("#window-room-nick").value.trim()||"visitante").slice(0,20),message);
+    input.value="";blip(880,.07,.045);
+  });
+  $("#window-room-nudge").addEventListener("click",()=>{
+    const win=$("#chat-room-window");win.classList.remove("nudge-shake");void win.offsetWidth;win.classList.add("nudge-shake");
+    if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260);}
+    appendWindowRoomMessage("Sistema","ZUMBIDO enviado!",true);toast("Bzzzt! Zumbido enviado na sala.");setTimeout(()=>win.classList.remove("nudge-shake"),650);
+  });
+
   // Sala #nostalgia: chat demonstrativo local e zumbido estilo MSN.
   const roomLog=$("#room-log");
   function roomAppend(name,message,system=false){const p=document.createElement("p");if(system)p.className="room-system";const b=document.createElement("b");b.textContent=system?"*** ":name+": ";p.append(b,document.createTextNode(message));roomLog.append(p);roomLog.scrollTop=roomLog.scrollHeight}
@@ -429,7 +449,6 @@
   const savedMood=storage.get(moodKey,{face:"ツ",label:"ツ"});
   $("#mood-select").value=savedMood.label;
   $("#mood-face").textContent=savedMood.face;
-  $("#mood-select").addEventListener("change",()=>{$("#mood-face").textContent=$("#mood-select").value;});
   $("#mood-save").addEventListener("click",()=>{
     const face=$("#mood-select").value;
     storage.set(moodKey,{face,label:face});
