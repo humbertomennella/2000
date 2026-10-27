@@ -370,10 +370,10 @@
   // Rádio real: streams ao vivo dentro da página, sem sintetizador e sem links para busca.
   const radioStations = {
     vapor:{label:"SomaFM Vaporwaves · vaporwave real",type:"audio",url:"https://ice5.somafm.com/vaporwaves-128-mp3",era:"VAPORWAVE · SOMAFM · AO VIVO"},
-    nineties:{label:"Brasil Hits Flashback · anos 90/2000",type:"embed",url:"https://www.brasilhits.com/flashback",era:"HITS DOS ANOS 90 E 2000"},
-    "two-thousands":{label:"Brasil Hits Flashback · pop dos anos 2000",type:"embed",url:"https://www.brasilhits.com/flashback",era:"POP · DANCE · ROCK · 2000s"},
+    nineties:{label:"Rádio Energia Dance · anos 90",type:"audio",url:"https://s05.w3bserver.com:20025/;",era:"EURODANCE · DANCE · ANOS 90"},
+    "two-thousands":{label:"Rádio Studio Flashback · anos 2000",type:"audio",url:"https://stream-163.zeno.fm/6gv76f1xruquv",era:"HITS · POP · ROCK · ANOS 2000"},
     games:{label:"SomaFM cliqhop · eletrônica",type:"audio",url:"https://ice5.somafm.com/cliqhop-128-mp3",era:"IDM · ELETRÔNICA EXPERIMENTAL"},
-    br:{label:"Brasil Hits Rock · clássicos",type:"embed",url:"https://www.brasilhits.com/rock",era:"ROCK CLÁSSICO · GRUNGE · ANOS 2000"}
+    br:{label:"Fita Cassete · flashback",type:"audio",url:"https://server01.ouvir.radio.br:8018/stream",era:"FLASHBACK · CLÁSSICOS DE VÁRIAS DÉCADAS"}
   };
   let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0;
   const radioAudio=$("#radio-audio"),radioEmbed=$("#radio-embed"),radioNote=$("#radio-player-note");
