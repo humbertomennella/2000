@@ -335,8 +335,7 @@
     br:{label:"BRASIL · MTV / LAN HOUSE / MP3",tempo:108,scale:[0,2,4,7,9],wave:"triangle",filter:1500,delay:.2}
   };
   let audioContext=null, masterGain=null, radioPlaying=false, soundEnabled=true, radioTimer=null, radioStep=0, radioStart=0, radioElapsed=0, radioGenre="vapor";
-  let activeNodes=[];
-  const classicSearches = [
+    const classicSearches = [
     ["Everybody (Backstreet's Back)","Backstreet Boys"],["...Baby One More Time","Britney Spears"],["Blue (Da Ba Dee)","Eiffel 65"],["In the End","Linkin Park"],["Complicated","Avril Lavigne"],["Clint Eastwood","Gorillaz"],["Anna Júlia","Los Hermanos"],["Dias Atrás","CPM 22"],["Around the World","Daft Punk"],["Resonance","HOME vaporwave"]
   ];
   function initAudio(){
@@ -352,7 +351,6 @@
     filter.type="lowpass"; filter.frequency.setValueAtTime(opts.filter||1300,when);
     gain.gain.setValueAtTime(.0001,when); gain.gain.exponentialRampToValueAtTime(opts.volume||.075,when+.025); gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
     osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(when); osc.stop(when+duration+.04);
-    activeNodes.push(osc);
   }
   function blip(freq=880,duration=.09,volume=.08){
     initAudio(); if(!audioContext||!soundEnabled) return; audioContext.resume();
@@ -409,12 +407,12 @@
   }
   function startRadio(){
     initAudio(); if(!audioContext)return; audioContext.resume();
-    radioPlaying=true;radioStart=Date.now()-radioElapsed;$("#radio-play").textContent="Ⅱ";$("#radio-player").classList.add("is-playing");
+    radioPlaying=true;radioStart=Date.now()-radioElapsed;$("#radio-play").textContent="Ⅱ";$(".winamp-shell").classList.add("is-playing");
     if(radioTimer)clearTimeout(radioTimer);radioStepFn();blip(660,.1,.045);
   }
   function pauseRadio(){
     radioPlaying=false;if(radioTimer)clearTimeout(radioTimer);radioElapsed=Date.now()-radioStart;
-    $("#radio-live-state").textContent="PAUSE";$("#radio-play").textContent="▶";$("#radio-status").textContent="PAUSED · RETRO MIX";$("#radio-player").classList.remove("is-playing");
+    $("#radio-live-state").textContent="PAUSE";$("#radio-play").textContent="▶";$("#radio-status").textContent="PAUSED · RETRO MIX";$(".winamp-shell").classList.remove("is-playing");
   }
   function stopRadio(){
     pauseRadio();radioElapsed=0;radioStep=0;$("#radio-live-state").textContent="STOP";$("#radio-track-title").textContent="WEB ZONE RADIO";$("#radio-track-era").textContent="Escolha sua estação e aperte PLAY";$("#radio-status").textContent="STOPPED · 56K FRIENDLY";$("#radio-player").classList.remove("is-playing");blip(260,.11,.04);
@@ -483,7 +481,21 @@
   $("#icq-status").addEventListener("click",e=>{const states=["🟢 Available","🌙 Away","⛔ Do not disturb","🔴 Invisible"];const current=states.indexOf(e.currentTarget.textContent);e.currentTarget.textContent=states[(current+1)%states.length];blip(600,.08,.04);});
   $("#icq-add-contact").addEventListener("click",()=>toast("UIN de exemplo: 1042000. Esta lista é uma simulação local."));
   $("#icq-sound-test").addEventListener("click",()=>{initAudio();if(soundEnabled){blip(1180,.09,.08);setTimeout(()=>blip(880,.13,.08),120);}});
-  $$(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const id=win.id;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
+  $("#msn-nudge").addEventListener("click",()=>{
+    const win=$("#messenger-window");win.classList.remove("nudge-shake");void win.offsetWidth;win.classList.add("nudge-shake");
+    initAudio();if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260);}
+    toast("Bzzzt! Você recebeu um chamar atenção estilo MSN.");
+    setTimeout(()=>win.classList.remove("nudge-shake"),650);
+  });
+  const msnChatObserver=new MutationObserver(records=>{
+    for(const record of records) for(const node of record.addedNodes){
+      if(node.nodeType===1&&node.tagName==="P"&&!node.textContent.startsWith("Você:")&&!node.textContent.startsWith("Sistema:")&&soundEnabled){
+        initAudio();blip(880,.1,.06);
+      }
+    }
+  });
+  msnChatObserver.observe($("#chat-log"),{childList:true});
+  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const id=win.id;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
