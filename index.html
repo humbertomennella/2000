@@ -157,7 +157,7 @@
             <p>Deixe seu nick, um recado e uma lembrança para quem chegar depois. Como nos bons tempos da web pessoal.</p>
             <form id="guestbook-form"><label>Seu nome / nick <input id="guest-name" maxlength="30" required placeholder="ex.: cyber_angel"></label><label>Sua homepage (opcional) <input id="guest-url" maxlength="100" type="url" placeholder="https://..."></label><label>Recado <textarea id="guest-message" maxlength="300" required placeholder="Seu site é muito legal!!!"></textarea></label><button class="retro-button">✍️ Assinar o livro de visitas</button></form>
             <div id="guestbook-entries" class="guestbook-entries"></div>
-            <p class="micro">Os recados ficam salvos neste navegador. Para compartilhar entre visitantes, é necessário conectar um banco de dados.</p>
+            <p id="community-guestbook-status" class="micro">Livro local enquanto o backend não estiver configurado. Quando conectado, os recados aprovados serão compartilhados entre visitantes.</p>
           </div>
         </section>
       </main>
@@ -176,10 +176,10 @@
     <section class="floating-window hidden" id="browser-window" role="dialog" aria-label="Navegador antigo"><div class="floating-title" data-drag="browser-window"><span>🌐 Internet Explorer 6</span><button data-close="browser-window">×</button></div><div class="browser-tools"><button id="browser-back" aria-label="Voltar">◀</button><button id="browser-forward" aria-label="Avançar">▶</button><button id="browser-home" aria-label="Página inicial">🏠</button><input id="browser-address" value="http://www.webzone2000.com/" aria-label="Endereço"><button id="browser-go">Ir</button><button id="browser-favorite" title="Adicionar aos favoritos" aria-label="Adicionar aos favoritos">★</button><button id="browser-bookmarks-toggle" aria-expanded="false">Favoritos / Histórico</button></div><div id="browser-bookmarks" class="browser-bookmarks" hidden><section><b>★ Favoritos</b><div id="browser-favorites-list"></div></section><section><b>🕒 Histórico</b><div id="browser-history-list"></div></section></div><div id="browser-page" class="browser-page"><h2>Bem-vindo à Web Zone!</h2><p>Este navegador é uma brincadeira local. Escolha um endereço:</p><button data-page="home">webzone2000.com</button><button data-page="chat">msn-messenger.net</button><button data-page="history">arquivo-historico.org</button><div class="fake-page-content">Conectado a 56 kbps<br>Pronto para explorar.</div></div></section>
     <section class="floating-window hidden" id="chat-room-window" role="dialog" aria-label="Sala de chat #nostalgia">
       <div class="floating-title" data-drag="chat-room-window"><span>💬 Chat Room · #nostalgia</span><div><button data-minimize="chat-room-window" aria-label="Minimizar">_</button><button data-close="chat-room-window" aria-label="Fechar">×</button></div></div>
-      <div class="room-toolbar"><span>● Sala pública simulada</span><label for="window-room-nick">Nick <input id="window-room-nick" maxlength="20" value="visitante"></label></div>
+      <div class="room-toolbar"><span id="community-presence-window">● Sala local · backend não configurado</span><label for="window-room-nick">Nick <input id="window-room-nick" maxlength="20" value="visitante"></label></div>
       <div id="window-room-log" class="room-log"><p class="room-system">*** Você entrou em #nostalgia. ***</p><p><b>pixel_girl:</b> alguém lembra dos emoticons gigantes do MSN? 🌼</p></div>
       <form id="window-room-form" class="room-form"><input id="window-room-input" maxlength="180" required placeholder="Digite sua mensagem..." aria-label="Mensagem na sala"><button type="submit">Enviar</button><button type="button" id="window-room-nudge">📳 Zumbido</button></form>
-      <p class="micro">As mensagens ficam nesta sessão do navegador. Não há respostas automáticas nem servidor de chat.</p>
+      <p id="community-chat-status" class="micro">Modo local até a configuração do backend. Com o backend ativo, as mensagens serão compartilhadas entre visitantes.</p>
     </section>
     <section class="floating-window messenger-window hidden" id="messenger-window" role="dialog" aria-label="Mensageiro antigo"><div class="floating-title" data-drag="messenger-window"><span>💬 MSN Messenger 7.5</span><div><button data-minimize="messenger-window" aria-label="Minimizar">_</button><button data-close="messenger-window" aria-label="Fechar">×</button></div></div><div class="messenger-switch"><button class="active" data-messenger-skin="msn">MSN Messenger</button><button data-messenger-skin="icq">ICQ 2000 skin</button><button id="msn-nudge">📳 Chamar atenção</button><button data-open="icq-window">Abrir ICQ separado</button></div><div class="messenger-head"><b>Lista de contatos</b><span>🟢 Online</span></div><div class="contacts"><button data-contact="Bia_xD">🟢 Bia_xD <small>ouvindo Avril Lavigne</small></button><button data-contact="Gui_Cs">🟢 Gui_Cs <small>jogando Counter-Strike</small></button><button data-contact="dark_angel">🌙 dark_angel <small>ocupado</small></button><button data-contact="maahh">🟡 maahh <small>ausente</small></button></div><div id="chat-log" class="chat-log"><p><b>Sistema:</b> Selecione um contato para conversar.</p></div><form id="chat-form" class="chat-form"><input id="chat-input" maxlength="180" placeholder="Digite sua mensagem..." aria-label="Mensagem"><button>Enviar</button></form><p class="micro">Simulação local: nenhuma mensagem é enviada a pessoas reais.</p></section>
     <section class="floating-window icq-window hidden" id="icq-window" role="dialog" aria-label="ICQ 2000">
@@ -210,6 +210,10 @@
   </div>
   <div id="toast" class="toast" role="status"></div>
   <div id="desktop-taskbar" class="desktop-taskbar"><button id="start-button" class="start-button" aria-expanded="false" aria-controls="start-menu">🪟 Iniciar</button><div id="taskbar-apps" class="taskbar-apps" aria-label="Janelas abertas"></div><div class="taskbar-tray"><span>🌐</span><time id="taskbar-clock">00:00</time></div></div>
+  <!-- Public backend config only. Never put a service_role key in browser code. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="community-config.js" defer></script>
   <script src="app.js" defer></script>
+  <script src="community.js" defer></script>
 </body>
 </html>
