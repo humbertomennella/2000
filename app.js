@@ -371,10 +371,10 @@
 
   // Rádio real: streams ao vivo dentro da página, sem sintetizador e sem links para busca.
   const radioStations = {
-    vapor:{label:"SomaFM Vaporwaves · vaporwave real",type:"audio",url:"https://ice5.somafm.com/vaporwaves-128-mp3",fallback:"https://ice6.somafm.com/vaporwaves-128-mp3",era:"VAPORWAVE · SOMAFM · AO VIVO"},
+    vapor:{label:"Yumi Co. Radio · Vaporwave / Future Funk",type:"audio",url:"https://yumicoradio.net/stream",fallback:"https://yumicoradio.net/stream_128",era:"VAPORWAVE · FUTURE FUNK · CITY POP"},
     nineties:{label:"Rádio Energia Dance · anos 90",type:"audio",url:"https://s05.w3bserver.com:20025/;",era:"EURODANCE · DANCE · ANOS 90"},
     "two-thousands":{label:"Rádio Studio Flashback · anos 2000",type:"audio",url:"https://stream-163.zeno.fm/6gv76f1xruquv",era:"HITS · POP · ROCK · ANOS 2000"},
-    games:{label:"SomaFM cliqhop · eletrônica",type:"audio",url:"https://ice5.somafm.com/cliqhop-128-mp3",fallback:"https://ice6.somafm.com/cliqhop-128-mp3",era:"IDM · ELETRÔNICA EXPERIMENTAL"},
+    games:{label:"Yumi Co. Radio · stream alternativo",type:"audio",url:"https://yumicoradio.net/stream_aac64",fallback:"https://yumicoradio.net/stream_128",era:"FUTURE FUNK · VAPORWAVE · CITY POP"},
     br:{label:"Fita Cassete · flashback",type:"audio",url:"https://server01.ouvir.radio.br:8018/stream",era:"FLASHBACK · CLÁSSICOS DE VÁRIAS DÉCADAS"}
   };
   let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0,radioWantsPlayback=false;
