@@ -139,6 +139,47 @@
     const fact = facts[Math.floor(Math.random() * facts.length)];
     $("#random-fact").textContent = fact;
   });
+  // Efeitos curtos de interface. A música da rádio vem de transmissões reais.
+  let audioContext = null, masterGain = null, soundEnabled = true;
+  function initAudio(){
+    if(audioContext) return;
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx) return;
+    audioContext=new Ctx();
+    masterGain=audioContext.createGain();
+    masterGain.gain.value=.18;
+    masterGain.connect(audioContext.destination);
+  }
+  function note(freq,duration,when,opts={}){
+    if(!audioContext||!masterGain)return;
+    const osc=audioContext.createOscillator(),gain=audioContext.createGain();
+    osc.type=opts.wave||"sine";
+    osc.frequency.setValueAtTime(freq,when);
+    gain.gain.setValueAtTime(.0001,when);
+    gain.gain.exponentialRampToValueAtTime(opts.volume||.05,when+.012);
+    gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    osc.connect(gain);gain.connect(masterGain);osc.start(when);osc.stop(when+duration+.025);
+  }
+  function blip(freq=880,duration=.09,volume=.06){
+    if(!soundEnabled)return;
+    initAudio();if(!audioContext)return;
+    audioContext.resume();
+    note(freq,duration,audioContext.currentTime,{volume});
+  }
+  let dialupAudio = null;
+  function dialupSound(){
+    if(!soundEnabled)return;
+    try{
+      if(!dialupAudio){
+        dialupAudio=new Audio("https://commons.wikimedia.org/wiki/Special:FilePath/Dial_up_modem_noises.ogg");
+        dialupAudio.preload="auto";dialupAudio.volume=.72;
+      }
+      dialupAudio.pause();dialupAudio.currentTime=0;
+      const playback=dialupAudio.play();
+      if(playback&&typeof playback.catch==="function")playback.catch(()=>toast("O navegador bloqueou o áudio do modem. Clique novamente em Conectar."));
+    }catch{toast("Não foi possível carregar o áudio do modem.");}
+  }
+
   $("#connect-btn").addEventListener("click", () => {
     const status = $("#connection-status");
     const button = $("#connect-btn");
@@ -429,7 +470,7 @@
     }
   });
   msnChatObserver.observe($("#chat-log"),{childList:true});
-  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const id=win.id;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
+  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
