@@ -29,7 +29,7 @@
       <div class="marquee"><div>✦ BEM-VINDO À WEB ZONE 2000 ✦ MSN, ICQ, LAN HOUSE, DISCMAN, ORKUT, TAMAGOTCHI, MTV, LOCADORA E MUITO MAIS ✦ CLIQUE, EXPLORE E NÃO ESQUEÇA DE SALVAR NOS FAVORITOS ✦</div></div>
     </header>
     <nav class="main-nav" aria-label="Navegação principal">
-      <a href="#inicio">🏠 HOME</a><a href="#timeline">📅 LINHA DO TEMPO</a><a href="#memorias">📼 MEMÓRIAS</a><a href="#galeria">🖼 GALERIA</a><a href="#guestbook">✍️ GUESTBOOK</a>
+      <a href="#inicio">🏠 HOME</a><a href="#radio">📻 RÁDIO</a><a href="#timeline">📅 LINHA DO TEMPO</a><a href="#geek">👾 GEEK ZONE</a><a href="#memorias">📼 MEMÓRIAS</a><a href="#galeria">🖼 GALERIA</a><a href="#guestbook">✍️ GUESTBOOK</a>
     </nav>
     <div class="content-grid" id="inicio">
       <aside class="sidebar">
@@ -41,6 +41,33 @@
       </aside>
       <main class="main-column">
         <section class="welcome-box panel"><h2 class="panel-title">✨ VOCÊ ENTROU NA WEB ZONE!</h2><div class="panel-body"><div class="welcome-flex"><div class="pixel-computer">🖥️</div><div><p><b>Prepare-se para voltar no tempo.</b></p><p>Um arquivo vivo das décadas que popularizaram a internet, mudaram a música, os jogos, o cinema e o jeito de conversar.</p><p class="blink">★ ATUALIZADO: OUTUBRO DE 2026 ★</p></div></div><div class="quick-links"><button data-open="browser-window">🌐 Abrir navegador antigo</button><button data-open="messenger-window">💬 Abrir mensageiro</button><button data-open="profile-window">👤 Meu perfil</button></div></div></section>
+        <section class="panel radio-panel" id="radio">
+          <h2 class="panel-title">📻 RÁDIO WEB ZONE FM 98.7</h2>
+          <div class="panel-body">
+            <div class="radio-console">
+              <div class="radio-screen">
+                <div class="radio-live"><span class="radio-led"></span> TRANSMISSÃO RETRÔ · 1995—2009</div>
+                <div class="radio-brand">WEB ZONE <span>FM</span></div>
+                <div id="radio-track-title" class="radio-track-title">Escolha uma faixa da programação</div>
+                <div id="radio-track-era" class="radio-track-era">ALT · POP · ROCK · GAME SOUNDTRACKS</div>
+                <div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="radio-controls">
+                <label for="radio-station">Estação</label>
+                <select id="radio-station">
+                  <option value="mix">Hit Parade 1995–2009</option>
+                  <option value="rock">Rock alternativo & emo</option>
+                  <option value="games">Trilhas de games</option>
+                  <option value="br">Brasil: rádio & MTV</option>
+                </select>
+                <div class="radio-actions"><button id="radio-prev" class="retro-button">◀ Anterior</button><button id="radio-play" class="retro-button">▶ Sintonizar</button><button id="radio-next" class="retro-button">Próxima ▶</button></div>
+                <p class="micro">O player abre vídeos musicais incorporados do YouTube. Clique para iniciar. Faixas e vídeos pertencem aos respectivos titulares; disponibilidade depende da região e do canal.</p>
+              </div>
+            </div>
+            <div id="radio-playlist" class="radio-playlist" aria-label="Programação da rádio"></div>
+            <div id="radio-player" class="radio-player"><div class="radio-placeholder">♫ Aguardando sintonia...<br><small>Escolha uma faixa para colocar a rádio no ar.</small></div></div>
+          </div>
+        </section>
         <section class="panel" id="noticias"><h2 class="panel-title">📰 NOTÍCIAS QUE MUDARAM O MUNDO</h2><div class="panel-body"><div class="filter-row"><label for="news-filter">Categoria:</label><select id="news-filter"><option value="all">Todas</option><option value="world">Mundo</option><option value="tech">Tecnologia</option><option value="br">Brasil</option><option value="pop">Cultura pop</option></select><label for="year-filter">Década:</label><select id="year-filter"><option value="all">Todas</option><option value="90">Anos 90</option><option value="00">Anos 2000</option></select></div><div id="news-grid" class="news-grid"></div><p class="micro">Conteúdo histórico resumido. Cada cartão abre detalhes e fontes para continuar a pesquisa.</p></div></section>
         <section class="panel" id="timeline"><h2 class="panel-title">🕒 MÁQUINA DO TEMPO: 1990–2009</h2><div class="panel-body"><div class="decade-switch"><button class="active" data-decade="all">1990–2009</button><button data-decade="90">ANOS 90</button><button data-decade="00">ANOS 2000</button></div><div id="timeline-list" class="timeline-list"></div></div></section>
         <section class="panel" id="memorias"><h2 class="panel-title">📼 COISAS QUE A INTERNET NÃO ESQUECE</h2><div class="panel-body memory-grid">
@@ -53,11 +80,34 @@
         </div></div></section>
         <section class="panel" id="tecnologia"><h2 class="panel-title">💾 TECNOLOGIA: DO DISQUETE AO YOUTUBE</h2><div class="panel-body tech-strip"><div><b>1991</b><span>World Wide Web pública</span></div><div><b>1998</b><span>Google é fundado</span></div><div><b>1999</b><span>MSN Messenger chega</span></div><div><b>2001</b><span>Wikipedia é lançada</span></div><div><b>2004</b><span>Facebook começa</span></div><div><b>2005</b><span>YouTube é lançado</span></div><div><b>2007</b><span>iPhone é apresentado</span></div></div><p class="micro">A web não nasceu nos anos 90, mas foi nessa década que começou a entrar nas casas de milhões de pessoas.</p></div></section>
         <section class="panel" id="cultura"><h2 class="panel-title">🎧 CULTURA POP: A TRILHA SONORA</h2><div class="panel-body"><div class="culture-list"><button data-culture="90">📻 Pop e rock dos anos 90</button><button data-culture="00">🎤 Pop, emo e hip-hop dos anos 2000</button><button data-culture="tv">📺 TV, desenhos e seriados</button><button data-culture="cinema">🎬 Cinema e franquias</button></div><div id="culture-detail" class="culture-detail">Escolha um tema para abrir uma cápsula cultural.</div></div></section>
+        <section class="panel" id="geek">
+          <h2 class="panel-title">👾 GEEK ZONE · CULTURA POP & FANDOMS</h2>
+          <div class="panel-body">
+            <div class="geek-banner">★ GEEK POWER ★ <span>COMICS · RPG · ANIME · SCI-FI · LAN HOUSE</span> ★ GEEK POWER ★</div>
+            <div class="geek-grid">
+              <article class="geek-card"><img loading="lazy" src="https://images.unsplash.com/photo-1606503153255-59d8b8b8219a?auto=format&fit=crop&w=600&q=80" alt="Controle de videogame"><div><b>🎮 GUERRA DOS CONSOLES</b><p>PlayStation 2, Dreamcast, Nintendo 64, Game Boy Advance e a eterna discussão sobre qual era o melhor.</p><span>1996–2006 · GAMES</span></div></article>
+              <article class="geek-card"><img loading="lazy" src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=600&q=80" alt="Coleção de quadrinhos"><div><b>🦸 HQs & SUPER-HERÓIS</b><p>Homem-Aranha, X-Men, Batman e o boom de adaptações que transformou quadrinhos em eventos de cinema.</p><span>COMICS · CINEMA</span></div></article>
+              <article class="geek-card"><img loading="lazy" src="https://images.unsplash.com/photo-1578632767115-3517cd0cce49?auto=format&fit=crop&w=600&q=80" alt="Ilustração de cultura anime"><div><b>🍥 ANIME & MANGÁ</b><p>Dragon Ball Z, Pokémon, Sailor Moon, Yu-Gi-Oh! e Naruto: discussões no recreio e maratonas na TV.</p><span>ANIME · MANGÁ</span></div></article>
+              <article class="geek-card"><img loading="lazy" src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80" alt="Setup de jogos"><div><b>🧙 RPG, MMO & LAN HOUSE</b><p>Diablo II, Ragnarok Online, The Sims, Warcraft III, Counter-Strike e noites que terminavam tarde demais.</p><span>PC GAMING · RPG</span></div></article>
+            </div>
+            <div class="geek-facts">
+              <div><strong>1996</strong><span>Pokémon estreia no Japão nos videogames.</span></div>
+              <div><strong>1998</strong><span>The Legend of Zelda: Ocarina of Time chega ao Nintendo 64.</span></div>
+              <div><strong>2001</strong><span>Shrek e Harry Potter viram fenômenos culturais.</span></div>
+              <div><strong>2004</strong><span>World of Warcraft muda o tamanho dos mundos online.</span></div>
+              <div><strong>2007</strong><span>BioShock, Portal e Mass Effect marcam o ano dos games.</span></div>
+            </div>
+          </div>
+        </section>
         <section class="panel" id="galeria"><h2 class="panel-title">🖼️ GALERIA DE UMA ÉPOCA</h2><div class="panel-body"><div class="gallery-grid">
           <a href="https://commons.wikimedia.org/wiki/Category:Compact_discs" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1612872915981-6d5b5a7e5c2a?auto=format&fit=crop&w=500&q=80" alt="Discos compactos"><span>CDs e música</span></a>
           <a href="https://commons.wikimedia.org/wiki/Category:Floppy_disks" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=500&q=80" alt="Computador antigo"><span>Computadores</span></a>
           <a href="https://commons.wikimedia.org/wiki/Category:Video_cassette_recorders" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="Televisão e vídeo"><span>TV e vídeo</span></a>
           <a href="https://commons.wikimedia.org/wiki/Category:Mobile_phones" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80" alt="Telefone celular"><span>Celulares</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Video_game_consoles" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=500&q=80" alt="Controle de videogame retrô"><span>Consoles & games</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Computer_games" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=500&q=80" alt="Computadores em evento gamer"><span>PC & LAN house</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Comic_books" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=500&q=80" alt="Quadrinhos"><span>HQs & heróis</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Anime" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1578632767115-3517cd0cce49?auto=format&fit=crop&w=500&q=80" alt="Arte de anime"><span>Anime & mangá</span></a>
         </div><p class="micro">As imagens são carregadas de serviços externos. Os links levam a categorias de referência para aprofundar a pesquisa.</p></div></section>
       </main>
       <aside class="sidebar right-sidebar">
@@ -78,6 +128,17 @@
     <section class="floating-window hidden" id="secret-window" role="dialog" aria-label="Página secreta"><div class="floating-title" data-drag="secret-window"><span>🔒 Área secreta</span><button data-close="secret-window">×</button></div><div class="secret-body"><h2>VOCÊ ACHOU!</h2><pre>  (\_/)
   (o.o)  <3
   (> <)  segredo desbloqueado!</pre><p>Você desbloqueou a página secreta. Sua recompensa é uma dose extra de nostalgia.</p><button id="secret-confetti">Fazer festa</button></div></section>
+  </div>
+  <div id="welcome-popup" class="popup-overlay retro-popup hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-popup-title">
+    <div class="popup-card">
+      <div class="popup-titlebar"><span>📨 Mensagem recebida!</span><button id="popup-close-x" aria-label="Fechar">×</button></div>
+      <h3 id="welcome-popup-title">VOCÊ TEM 1 NOVO RECADO</h3>
+      <div class="popup-art">💌 ✨ 💾</div>
+      <p><b>Alguém deixou um recado na Web Zone!</b></p>
+      <p>Na verdade, é só o portal dando boas-vindas. Mas a nostalgia precisava de um popup inconveniente.</p>
+      <div class="popup-buttons"><button id="popup-open-radio">📻 Ouvir a rádio</button><button id="popup-close">Fechar janela</button></div>
+      <small>Esta janela aparece uma vez por sessão. Nenhum som toca sem sua ação.</small>
+    </div>
   </div>
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js" defer></script>
