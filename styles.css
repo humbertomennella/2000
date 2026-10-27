@@ -273,3 +273,16 @@ body{margin:0;overflow-x:hidden}
 .archive-links b{display:block;font:bold 11px Tahoma;margin-bottom:4px}
 .archive-links span{display:block;font:11px/1.4 "Times New Roman",serif;color:#222}
 @media(max-width:720px){.archive-links{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Skin alternativo inspirado no Windows Media Player 9 */
+.skin-toggle{border:1px outset #aaa;background:#bdbdbd;color:#111;padding:3px 5px;font:9px Tahoma;cursor:pointer}
+.winamp-shell.wmp-skin{background:#6d7e91;border-color:#d4e3f4}
+.winamp-shell.wmp-skin .winamp-titlebar{background:linear-gradient(90deg,#0a2d5b,#267ac0,#0b2b58);color:#fff}
+.winamp-shell.wmp-skin .winamp-display{background:linear-gradient(135deg,#071c3a,#144b7e);border-color:#9cb8d6;color:#d4efff}
+.winamp-shell.wmp-skin .winamp-readout,.winamp-shell.wmp-skin .winamp-song span{color:#a5d8ff}
+.winamp-shell.wmp-skin .winamp-note{color:#7ed4ff;text-shadow:0 0 8px #42aaff}
+.winamp-shell.wmp-skin .winamp-spectrum i{background:linear-gradient(0deg,#1688ff,#37e4ff 60%,#e5ffff);box-shadow:0 0 3px #1aaaff}
+.winamp-shell.wmp-skin .winamp-transport button{background:linear-gradient(#e8f5ff,#7ea9cf);border-color:#fff}
+.winamp-shell.wmp-skin .winamp-status{background:#b6c9da;color:#142c43}
+@media(max-width:420px){.winamp-titlebar{flex-wrap:wrap}.skin-toggle{font-size:8px}}
