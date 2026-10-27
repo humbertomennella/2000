@@ -42,7 +42,7 @@ try{
   await page.locator("#msn-nudge").click();
   assert.equal(await page.locator("#messenger-window").evaluate(el=>el.classList.contains("nudge-shake")),true,"MSN attention should animate");
 
-  await page.locator("[data-open='icq-window']").first().click();
+  await page.locator(".quick-links [data-open='icq-window']").click();
   page.once("dialog",dialog=>dialog.accept("smoke_contact"));
   await page.locator("#icq-add-contact").click();
   assert.equal(await page.locator("[data-icq-contact='smoke_contact']").count(),1,"ICQ should add contacts");
@@ -51,7 +51,7 @@ try{
   assert.ok((await page.locator("#icq-chat-log").innerText()).includes("smoke test ICQ"),"ICQ should append sent messages");
   await page.locator("#icq-nudge").click();
 
-  await page.locator("[data-open='chat-room-window']").first().click();
+  await page.locator(".quick-links [data-open='chat-room-window']").click();
   await page.locator("#window-room-input").fill("smoke test sala");
   await page.locator("#window-room-form button[type='submit']").click();
   assert.ok((await page.locator("#window-room-log").innerText()).includes("smoke test sala"),"floating chat should append sent messages");
@@ -68,7 +68,7 @@ try{
   await page.locator("#guestbook-form button").click();
   assert.ok((await page.locator("#guestbook-entries").innerText()).includes("guestbook smoke test"),"guestbook should render submitted entries");
 
-  await page.locator("[data-open='browser-window']").first().click();
+  await page.locator(".quick-links [data-open='browser-window']").click();
   await page.locator("#browser-favorite").click();
   await page.locator("#browser-bookmarks-toggle").click();
   assert.ok((await page.locator("#browser-favorites-list").innerText()).includes("webzone2000.com"),"browser favorites should show saved page");
@@ -79,7 +79,7 @@ try{
 
   await page.locator("#global-sound-volume").evaluate(el=>{el.value="35";el.dispatchEvent(new Event("input",{bubbles:true}));});
   assert.equal(await page.evaluate(()=>localStorage.getItem("webzone-sound-level")),"0.35","global sound volume should persist");
-  await page.locator("[data-open='profile-window']").first().click();
+  await page.locator(".quick-links [data-open='profile-window']").click();
   await page.locator("#profile-edit-name").fill("perfil_teste");
   await page.locator("#profile-quote").fill("frase de teste");
   await page.locator("#profile-edit-form button[type='submit']").click();
