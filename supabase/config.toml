@@ -1,0 +1,4 @@
+# WEB ZONE 2000: this public endpoint validates/rate-limits anonymous visitor posts.
+# It uses its own validation and rate limiting; no service key is shipped to the browser.
+[functions.community-post]
+verify_jwt = false
