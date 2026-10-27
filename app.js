@@ -415,7 +415,7 @@
     $("#radio-live-state").textContent="PAUSE";$("#radio-play").textContent="▶";$("#radio-status").textContent="PAUSED · RETRO MIX";$(".winamp-shell").classList.remove("is-playing");
   }
   function stopRadio(){
-    pauseRadio();radioElapsed=0;radioStep=0;$("#radio-live-state").textContent="STOP";$("#radio-track-title").textContent="WEB ZONE RADIO";$("#radio-track-era").textContent="Escolha sua estação e aperte PLAY";$("#radio-status").textContent="STOPPED · 56K FRIENDLY";$("#radio-player").classList.remove("is-playing");blip(260,.11,.04);
+    pauseRadio();radioElapsed=0;radioStep=0;$("#radio-live-state").textContent="STOP";$("#radio-track-title").textContent="WEB ZONE RADIO";$("#radio-track-era").textContent="Escolha sua estação e aperte PLAY";$("#radio-status").textContent="STOPPED · 56K FRIENDLY";$(".winamp-shell").classList.remove("is-playing");blip(260,.11,.04);
   }
   function renderRadioPlaylist(){
     const list=$("#radio-playlist");list.replaceChildren();
