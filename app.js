@@ -184,11 +184,14 @@
     const status = $("#connection-status");
     const button = $("#connect-btn");
     if (status.textContent === "conectado") {
-      status.textContent = "desconectado"; $(".led").style.background = "#f00"; button.textContent = "Conectar à internet"; toast("Conexão encerrada. Pode liberar a linha telefônica.");
+      status.textContent = "desconectado"; $(".led").style.background = "#f00"; button.textContent = "Conectar à internet";
+      if (dialupAudio) { dialupAudio.pause(); dialupAudio.currentTime = 0; }
+      toast("Conexão encerrada. Pode liberar a linha telefônica.");
     } else {
       dialupSound();
       status.textContent = "discando..."; button.disabled = true;
-      setTimeout(() => { status.textContent = "conectado"; $(".led").style.background = "#0a0"; button.disabled = false; button.textContent = "Desconectar"; toast("Conectado a 56 kbps. Não atenda o telefone!"); }, 1800);
+      // O áudio de modem completo dura cerca de 29 s, então a conexão não termina em 1,8 s.
+      setTimeout(() => { status.textContent = "conectado"; $(".led").style.background = "#0a0"; button.disabled = false; button.textContent = "Desconectar"; toast("Conectado a 56 kbps. Não atenda o telefone!"); }, 28000);
     }
   });
 
