@@ -12,5 +12,6 @@ for(const id of ["start-menu","desktop-taskbar","taskbar-apps","global-sound-vol
 assert.ok(css.includes("@media(max-width:720px)"),"mobile rules required");
 assert.ok(app.includes("webzone-browser-history")&&app.includes("webzone-browser-favorites"),"history/favorites persistence required");
 assert.ok(app.includes("webzone-personal-profile"),"profile persistence required");
+assert.ok(!/(?<!\\$)\\$\\(["'][^"']+["']\\)\\.(?:forEach|find|some|filter|map)\\(/.test(app),"collection methods must use querySelectorAll rather than querySelector");
 assert.ok(!/autoReplies|botReplies/i.test(app),"automated chat replies must not return");
 console.log("WEB ZONE smoke tests passed.");
