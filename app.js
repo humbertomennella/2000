@@ -148,7 +148,7 @@
     });
   }
   $("#museum-filter").addEventListener("change",renderMuseum);renderMuseum();
-  $("[data-decade]").forEach(button => button.addEventListener("click", () => {
+  $$("[data-decade]").forEach(button => button.addEventListener("click", () => {
     $$("[data-decade]").forEach(b => b.classList.toggle("active", b === button));
     renderTimeline(button.dataset.decade);
   }));
@@ -268,8 +268,8 @@
     if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");renderTaskbar();
   }
   function closeWindow(id){const win=document.getElementById(id);if(win)win.classList.add("hidden");renderTaskbar();}
-  $("[data-open]").forEach(button=>button.addEventListener("click",()=>openWindow(button.dataset.open)));
-  $("[data-close]").forEach(button=>button.addEventListener("click",()=>closeWindow(button.dataset.close)));
+  $$("[data-open]").forEach(button=>button.addEventListener("click",()=>openWindow(button.dataset.open)));
+  $$("[data-close]").forEach(button=>button.addEventListener("click",()=>closeWindow(button.dataset.close)));
   if(startButton&&startMenu)startButton.addEventListener("click",()=>{
     const opening=startMenu.classList.contains("hidden");startMenu.classList.toggle("hidden",!opening);startButton.setAttribute("aria-expanded",String(opening));
   });
@@ -277,7 +277,7 @@
     if(!startMenu||!startButton||startMenu.classList.contains("hidden"))return;
     if(!startMenu.contains(e.target)&&!startButton.contains(e.target)){startMenu.classList.add("hidden");startButton.setAttribute("aria-expanded","false");}
   });
-  $("[data-start-radio]").forEach(link=>link.addEventListener("click",()=>{
+  $$("[data-start-radio]").forEach(link=>link.addEventListener("click",()=>{
     $("#radio").scrollIntoView({behavior:"smooth",block:"start"});if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");
   }));
   $$(".floating-title").forEach(bar => {
@@ -425,8 +425,8 @@
     const data={...storage.get(profileWindowKey,{}),name:$("#profile-edit-name").value.trim().slice(0,24)||"visitante_2000",status:$("#profile-edit-status").value,music:$("#profile-music-input").value.trim().slice(0,80)||"nenhuma música selecionada",quote:$("#profile-quote").value.trim().slice(0,120)||"a vida é feita de pixels",avatar:$(".avatar").textContent};
     applyProfileWindowData(data);toast("Perfil salvo neste navegador.");
   });
-  $(".profile-friends [data-profile-friend]").forEach(button=>button.addEventListener("click",()=>{
-    openWindow("messenger-window");const target=$("#messenger-window [data-contact]").find(item=>item.dataset.contact===button.dataset.profileFriend);if(target)target.click();
+  $$(".profile-friends [data-profile-friend]").forEach(button=>button.addEventListener("click",()=>{
+    openWindow("messenger-window");const target=$$("#messenger-window [data-contact]").find(item=>item.dataset.contact===button.dataset.profileFriend);if(target)target.click();
   }));
   $("#change-avatar").addEventListener("click",()=>{
     const avatars=["😎","🦇","🐸","👽","🧙","🐱","💿","🤘"],current=$(".avatar").textContent,next=avatars[(avatars.indexOf(current)+1)%avatars.length];
@@ -597,7 +597,7 @@
     }
   });
   msnChatObserver.observe($("#chat-log"),{childList:true});
-  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");renderTaskbar();});});
+  $$(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");renderTaskbar();});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
