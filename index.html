@@ -65,7 +65,7 @@
             </div>
             <div class="radio-quickbar"><button id="radio-sound-toggle" class="retro-button">🔊 Efeitos: ligados</button><span class="micro">Transmissões musicais reais e contínuas, dentro desta página. O navegador pode exigir um clique para liberar o som.</span></div>
             <div id="radio-player" class="radio-player">
-              <audio id="radio-audio" preload="none" autoplay controls aria-label="Rádio vaporwave ao vivo"></audio>
+              <audio id="radio-audio" preload="none" autoplay aria-label="Rádio ao vivo"></audio>
               <iframe id="radio-embed" title="Rádio Flashback ao vivo" src="about:blank" loading="lazy" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
               <div id="radio-player-note" class="radio-placeholder">♫ WEB ZONE FM<br><small>Escolha uma estação e aperte PLAY. Vaporwave e hits de época tocam aqui dentro.</small></div>
             </div>
@@ -148,8 +148,7 @@
           <a href="https://commons.wikimedia.org/wiki/Category:Computer_keyboards" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80" alt="Teclado de computador"><span>Teclado & mouse</span></a>
           <a href="https://commons.wikimedia.org/wiki/Category:Anime" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1578632767115-3517cd0cce49?auto=format&fit=crop&w=500&q=80" alt="Arte de anime"><span>Anime & mangá</span></a>
         </div><p class="micro">As imagens são carregadas de serviços externos. Os links levam a categorias de referência para aprofundar a pesquisa.</p></div></section>
-      </main>
-        <section class="panel full-guestbook" id="guestbook">
+              <section class="panel full-guestbook" id="guestbook">
           <h2 class="panel-title">📖 LIVRO DE VISITAS · ASSINE AQUI!</h2>
           <div class="panel-body guestbook-body">
             <p>Deixe seu nick, um recado e uma lembrança para quem chegar depois. Como nos bons tempos da web pessoal.</p>
@@ -158,9 +157,10 @@
             <p class="micro">Os recados ficam salvos neste navegador. Para compartilhar entre visitantes, é necessário conectar um banco de dados.</p>
           </div>
         </section>
+      </main>
       <aside class="sidebar right-sidebar">
-        <section class="panel status-panel"><h2 class="panel-title">📟 MEU STATUS</h2><div class="panel-body status-editor"><label for="mood-select">Status Messenger</label><select id="mood-select"><option>ouvindo música 🎧</option><option>no ICQ 🟢</option><option>baixando MP3 💿</option><option>jogando CS 🎮</option><option>sumido(a) por aí 🌙</option></select><label for="nickname">Seu nick</label><input id="nickname" maxlength="20" value="visitante_2000"><button id="save-profile" class="retro-button">Atualizar status</button><p id="profile-preview" class="profile-preview">visitante_2000 está ouvindo música 🎧</p></div></section>
-        <section class="panel mood-panel" id="meu-humor"><h2 class="panel-title">😎 MEU HUMOR</h2><div class="panel-body"><p id="mood-caption">Humor atual: <b>nostálgico</b></p><div class="mood-buttons"><button type="button" data-humor="nostálgico">📼 Nostálgico</button><button type="button" data-humor="offline">🌙 Offline</button><button type="button" data-humor="geek">👾 Geek</button><button type="button" data-humor="caótico">💿 Caótico</button></div><p class="micro">Atualize seu humor, como nos velhos perfis.</p></div></section>
+        <section class="panel status-panel"><h2 class="panel-title">📟 MEU STATUS</h2><div class="panel-body status-editor"><label for="profile-status">Status Messenger</label><select id="profile-status"><option>ouvindo música 🎧</option><option>no ICQ 🟢</option><option>baixando MP3 💿</option><option>jogando CS 🎮</option><option>sumido(a) por aí 🌙</option></select><label for="nickname">Seu nick</label><input id="nickname" maxlength="20" value="visitante_2000"><button id="save-profile" class="retro-button">Atualizar status</button><p id="profile-preview" class="profile-preview">visitante_2000 está ouvindo música 🎧</p></div></section>
+        <section class="panel mood-panel" id="meu-humor"><h2 class="panel-title">😎 MEU HUMOR HOJE</h2><div class="panel-body"><div id="mood-face" class="mood-face" aria-live="polite">ツ</div><label for="mood-select">Como estou hoje:</label><select id="mood-select"><option value="ツ">online e feliz</option><option value="ಠ_ಠ">sem paciência</option><option value="ಥ_ಥ">meu modem caiu</option><option value="♥‿♥">apaixonado(a)</option><option value="¬_¬">não me perturbe</option></select><button class="retro-button" id="mood-save">Atualizar meu status</button><p class="micro">Escolha seu humor e atualize o perfil, como na homepage original.</p></div></section>
         <section class="panel" id="jogos"><h2 class="panel-title">🎮 ARCADE DA WEB</h2><div class="panel-body"><p>Teste seus reflexos no minigame mais simples da história.</p><div id="reaction-game" class="reaction-game"><span>Clique em INICIAR e aguarde o verde.</span></div><button id="game-start" class="retro-button">Iniciar jogo</button><p id="game-result" class="micro">Recorde salvo neste navegador.</p></div></section>
         <section class="panel"><h2 class="panel-title">🔗 WEBRING</h2><div class="panel-body webring"><p>Você está no <b>Retro Web Ring</b>.</p><button id="ring-prev">◀ Anterior</button><button id="ring-next">Próximo ▶</button><p id="ring-label">Site 01 de 05: Nostalgia Digital</p></div></section>
         <section class="panel"><h2 class="panel-title">📨 RECADINHO</h2><div class="panel-body"><p>Deixe uma mensagem no livro de visitas!</p><a class="retro-button" href="#guestbook">✍️ Ir ao guestbook</a><button data-open="secret-window" class="retro-button">Não clique aqui</button></div></section>
@@ -175,7 +175,7 @@
     <section class="floating-window icq-window hidden" id="icq-window" role="dialog" aria-label="ICQ 2000">
       <div class="floating-title" data-drag="icq-window"><span>🌼 ICQ 2000b · Uh-oh!</span><div><button data-minimize="icq-window" aria-label="Minimizar">_</button><button data-close="icq-window" aria-label="Fechar">×</button></div></div>
       <div class="icq-header"><span class="icq-flower">✿</span><div><b>ICQ</b><small>People connected</small></div><span class="icq-online">● ONLINE</span></div>
-      <div class="icq-toolbar"><button id="icq-status">🟢 Available</button><button id="icq-add-contact">＋ Add user</button><button id="icq-sound-test">🔔 Test sound</button></div>
+      <div class="icq-toolbar"><button id="icq-status">🟢 Available</button><button id="icq-add-contact">＋ Add user</button><button id="icq-sound-test">🔔 Test sound</button><button id="icq-nudge">📳 Send attention</button></div>
       <div class="icq-contact-list"><button data-icq-contact="Neo_1999">🟢 Neo_1999 <small>away from keyboard</small></button><button data-icq-contact="pixel_girl">🟢 pixel_girl <small>listening to The Cure</small></button><button data-icq-contact="R4v3n">🟡 R4v3n <small>brb</small></button><button data-icq-contact="xX_D3v_Xx">🔴 xX_D3v_Xx <small>offline</small></button><button data-icq-contact="lan_master">🟢 lan_master <small>Counter-Strike 1.6?</small></button></div>
       <div class="icq-chat-title" id="icq-chat-title">Mensagem instantânea</div><div id="icq-chat-log" class="chat-log"><p><b>ICQ System:</b> Selecione alguém da lista para iniciar uma conversa.</p></div>
       <form id="icq-chat-form" class="chat-form"><input id="icq-chat-input" maxlength="180" placeholder="Type your message..." aria-label="Mensagem ICQ"><button>Send</button></form>
