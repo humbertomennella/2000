@@ -314,6 +314,101 @@
     const style = document.createElement("style"); style.textContent = "@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.2}}"; layer.append(style); document.body.append(layer); setTimeout(()=>layer.remove(),4500);
   });
 
+
+
+  // Rádio Web Zone FM: o áudio só começa após clique explícito do visitante.
+  const radioTracks = {
+    mix: [
+      {title:"...Baby One More Time",artist:"Britney Spears",year:1998,era:"TEEN POP",id:"C-u5WLJ9Yk4"},
+      {title:"All Star",artist:"Smash Mouth",year:1999,era:"POP ROCK",id:"L_jWHffIx5E"},
+      {title:"Blue (Da Ba Dee)",artist:"Eiffel 65",year:1998,era:"EURODANCE",id:"zA52uNzx7Y4"},
+      {title:"Complicated",artist:"Avril Lavigne",year:2002,era:"POP PUNK",id:"5NPBIwQyPWE"},
+      {title:"In the End",artist:"Linkin Park",year:2000,era:"NU METAL",id:"eVTXPUF4Oz4"},
+      {title:"Clint Eastwood",artist:"Gorillaz",year:2001,era:"ALTERNATIVE",id:"1V_xRb0x9aw"}
+    ],
+    rock: [
+      {title:"In the End",artist:"Linkin Park",year:2000,era:"NU METAL",id:"eVTXPUF4Oz4"},
+      {title:"Complicated",artist:"Avril Lavigne",year:2002,era:"POP PUNK",id:"5NPBIwQyPWE"},
+      {title:"All Star",artist:"Smash Mouth",year:1999,era:"POP ROCK",id:"L_jWHffIx5E"}
+    ],
+    games: [
+      {title:"Super Mario 64 · soundtrack",artist:"Nintendo 64 era",year:1996,era:"GAME SOUNDTRACK",id:"NNv2RHR62Rs"},
+      {title:"Zelda: Ocarina of Time · soundtrack",artist:"Nintendo 64 era",year:1998,era:"GAME SOUNDTRACK",id:"CKA1zCwcYBE"},
+      {title:"Megalovania · Undertale",artist:"Toby Fox",year:2000,era:"BONUS RETRO GAME",id:"wDgQdr8ZkTw"}
+    ],
+    br: [
+      {title:"Anna Júlia",artist:"Los Hermanos",year:1999,era:"ROCK BRASILEIRO",id:"umMI7oB5s5Y"},
+      {title:"Dias Atrás",artist:"CPM 22",year:2000,era:"ROCK BRASILEIRO",id:"9dsUVU7Z9yU"},
+      {title:"Só por uma Noite",artist:"Charlie Brown Jr.",year:2001,era:"SKATE ROCK",id:"mS4H6B7c8xY"}
+    ]
+  };
+  let radioList = radioTracks.mix;
+  let radioIndex = -1;
+  const radioPlaylist = $("#radio-playlist");
+  function renderRadioPlaylist() {
+    radioPlaylist.replaceChildren();
+    radioList.forEach((track,index) => {
+      const button = document.createElement("button");
+      button.className = "radio-track" + (index === radioIndex ? " active" : "");
+      button.type = "button";
+      const title = document.createElement("strong"); title.textContent = track.title;
+      const meta = document.createElement("span"); meta.textContent = track.artist + " · " + track.year;
+      button.append(title,meta);
+      button.addEventListener("click", () => tuneRadio(index));
+      radioPlaylist.append(button);
+    });
+  }
+  function tuneRadio(index) {
+    if (!radioList.length) return;
+    radioIndex = (index + radioList.length) % radioList.length;
+    const track = radioList[radioIndex];
+    $("#radio-track-title").textContent = track.title + " — " + track.artist;
+    $("#radio-track-era").textContent = track.year + " · " + track.era;
+    $("#radio-play").textContent = "♫ Tocando seleção";
+    const frame = document.createElement("iframe");
+    frame.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(track.id) + "?autoplay=1&rel=0";
+    frame.title = "Player de música: " + track.title;
+    frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.allowFullscreen = true;
+    const player = $("#radio-player"); player.replaceChildren(frame);
+    renderRadioPlaylist();
+  }
+  $("#radio-station").addEventListener("change", () => {
+    radioList = radioTracks[$("#radio-station").value] || radioTracks.mix;
+    radioIndex = -1;
+    $("#radio-track-title").textContent = "Estação pronta para sintonizar";
+    $("#radio-track-era").textContent = $("#radio-station").selectedOptions[0].textContent.toUpperCase();
+    $("#radio-play").textContent = "▶ Sintonizar";
+    $("#radio-player").innerHTML = '<div class="radio-placeholder">♫ Estação selecionada.<br><small>Escolha uma faixa para começar a ouvir.</small></div>';
+    renderRadioPlaylist();
+  });
+  $("#radio-play").addEventListener("click", () => tuneRadio(radioIndex < 0 ? 0 : radioIndex));
+  $("#radio-next").addEventListener("click", () => tuneRadio(radioIndex + 1));
+  $("#radio-prev").addEventListener("click", () => tuneRadio(radioIndex < 0 ? 0 : radioIndex - 1));
+  renderRadioPlaylist();
+
+  // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
+  const welcomePopup = $("#welcome-popup");
+  function closeWelcomePopup() {
+    welcomePopup.classList.add("hidden");
+    try { sessionStorage.setItem("webzone-popup-seen","1"); } catch {}
+  }
+  $("#popup-close").addEventListener("click", closeWelcomePopup);
+  $("#popup-close-x").addEventListener("click", closeWelcomePopup);
+  $("#popup-open-radio").addEventListener("click", () => {
+    closeWelcomePopup();
+    $("#radio").scrollIntoView({behavior:"smooth",block:"start"});
+    toast("WEB ZONE FM: escolha sua faixa e sintonize.");
+  });
+  welcomePopup.addEventListener("click", e => { if (e.target === welcomePopup) closeWelcomePopup(); });
+  try {
+    if (!sessionStorage.getItem("webzone-popup-seen")) {
+      setTimeout(() => welcomePopup.classList.remove("hidden"), 7000);
+    }
+  } catch {}
+
+
   // Deliberately no automatic sound or unsolicited popup: nostalgia should be fun, not malware.
   console.info("WEB ZONE 2000 carregada. Modo nostalgia: ativado.");
 })();
