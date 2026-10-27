@@ -1,0 +1,16 @@
+import { readFileSync } from "node:fs";
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+const html=readFileSync("index.html","utf8"),app=readFileSync("app.js","utf8"),css=readFileSync("styles.css","utf8");
+execFileSync(process.execPath,["--check","app.js"],{stdio:"inherit"});
+const ids=[...html.matchAll(/\bid=["']([^"']+)["']/g)].map(m=>m[1]);
+const duplicates=ids.filter((id,i)=>ids.indexOf(id)!==i);
+assert.deepEqual([...new Set(duplicates)],[],"HTML must not contain duplicate IDs");
+for(const m of app.matchAll(/\$\(["']#([A-Za-z][\w-]*)["']\)/g)) assert.ok(ids.includes(m[1]),`app.js selects missing HTML id #${m[1]}`);
+for(const m of html.matchAll(/data-open=["']([^"']+)["']/g)) assert.ok(html.includes(`id="${m[1]}"`),`missing data-open target ${m[1]}`);
+for(const id of ["start-menu","desktop-taskbar","taskbar-apps","global-sound-volume","browser-favorites-list","browser-history-list","museum-exhibits","profile-edit-form","mood-save","guestbook-form","chat-room-window","messenger-window","icq-window","radio-audio","game-start"]) assert.ok(ids.includes(id),`required UI missing: ${id}`);
+assert.ok(css.includes("@media(max-width:720px)"),"mobile rules required");
+assert.ok(app.includes("webzone-browser-history")&&app.includes("webzone-browser-favorites"),"history/favorites persistence required");
+assert.ok(app.includes("webzone-personal-profile"),"profile persistence required");
+assert.ok(!/autoReplies|botReplies/i.test(app),"automated chat replies must not return");
+console.log("WEB ZONE smoke tests passed.");
