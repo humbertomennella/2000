@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
 const corsFor=(origin:string)=>({ "Access-Control-Allow-Origin":origin==="https://humbertomennella.github.io"||origin.startsWith("http://localhost:")?origin:"https://humbertomennella.github.io", "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods":"POST, OPTIONS", "Vary":"Origin" });
 const respond=(body:unknown,status=200,origin="")=>new Response(JSON.stringify(body),{status,headers:{...corsFor(origin),"Content-Type":"application/json; charset=utf-8"}});
