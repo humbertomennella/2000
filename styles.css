@@ -286,3 +286,33 @@ body{margin:0;overflow-x:hidden}
 .winamp-shell.wmp-skin .winamp-transport button{background:linear-gradient(#e8f5ff,#7ea9cf);border-color:#fff}
 .winamp-shell.wmp-skin .winamp-status{background:#b6c9da;color:#142c43}
 @media(max-width:420px){.winamp-titlebar{flex-wrap:wrap}.skin-toggle{font-size:8px}}
+
+
+/* RESTAURAÇÃO: player real, sala, humor e livro de visitas */
+#radio-player{display:block;min-height:0;background:#111;border:3px ridge #fff;padding:6px}
+#radio-audio{display:block;width:100%;min-height:42px}
+#radio-embed{display:block;width:100%;height:245px;border:0;background:#eee}
+#radio-embed[hidden],#radio-audio[hidden],#radio-player-note[hidden]{display:none!important}
+#radio-player-note{color:#8f8;text-align:center;padding:9px;font:11px/1.6 "Courier New",monospace}
+.room-body{background:#c0c0c0}
+.room-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:#000080;color:#fff;padding:7px;font:11px Tahoma}
+.room-toolbar label{display:flex;align-items:center;gap:5px}
+.room-toolbar input{width:130px;max-width:100%;padding:4px}
+.room-log{height:220px;overflow:auto;background:#fff;border:3px inset #aaa;padding:9px;font:12px/1.5 "Courier New",monospace}
+.room-log p{margin:0 0 8px;overflow-wrap:anywhere}.room-log b{color:#000080}.room-log .room-system{color:#a00080;font-weight:bold}
+.room-form{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;margin-top:7px}
+.room-form input{min-width:0;padding:7px}.room-form button{border:3px outset #fff;background:#c0c0c0;padding:6px;font:bold 11px Tahoma;cursor:pointer}
+.room-log.room-nudge{animation:msnNudge .12s linear 5}
+.mood-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.mood-buttons button{min-width:0;background:#ffffee;border:2px outset #fff;padding:6px 4px;font:10px Tahoma;cursor:pointer}
+.mood-buttons button.active{background:#ffff00;border-style:inset;font-weight:bold}
+.full-guestbook{grid-column:2}.full-guestbook .guestbook-body{display:grid;gap:9px}
+#guestbook-form{display:grid;grid-template-columns:minmax(140px,.7fr) minmax(0,1.6fr) auto;gap:8px;align-items:end}
+#guestbook-form label{display:grid;gap:4px;font:bold 11px Tahoma}
+#guestbook-form input,#guestbook-form textarea{width:100%;min-width:0;padding:7px;background:#fff}
+#guestbook-form textarea{min-height:68px;resize:vertical}
+#guestbook-form button{min-height:34px}
+.guestbook-entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.guest-entry{min-width:0;background:#ffffee;border:2px ridge #fff;padding:8px;overflow-wrap:anywhere}
+.guest-entry b{color:#000080;font:bold 11px Tahoma}.guest-entry p{margin:6px 0;font-size:12px}.guest-entry small{font-size:10px;color:#555}
+@media(max-width:720px){.room-form{grid-template-columns:minmax(0,1fr) auto}.room-form #room-nudge{grid-column:1/-1}.full-guestbook{grid-column:1}.full-guestbook #guestbook-form{grid-template-columns:minmax(0,1fr)}.guestbook-entries{grid-template-columns:minmax(0,1fr)}}
