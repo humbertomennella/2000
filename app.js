@@ -214,7 +214,7 @@
     const win = document.getElementById(id);
     if (!win) return;
     windows.forEach(w => { if (w !== win) w.style.zIndex = "20"; });
-    win.classList.remove("hidden"); win.style.zIndex = String(Date.now() % 100000 + 30);
+    win.classList.remove("hidden","minimized"); win.style.zIndex = String(Date.now() % 100000 + 30);
     const input = $("input", win); if (input) setTimeout(() => input.focus(), 50);
   }
   function closeWindow(id) { const win = document.getElementById(id); if (win) win.classList.add("hidden"); }
@@ -420,6 +420,11 @@
   $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
   tuneRadio(true);
+  // Se o navegador bloquear autoplay com som, tente novamente no primeiro gesto fora do player.
+  document.addEventListener("pointerdown",e=>{
+    if(e.target.closest("#radio")||radioPlaying||!radioWantsPlayback||!radioAudio.paused||!radioAudio.src)return;
+    radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>{});
+  },{once:true});
   setInterval(()=>{if(radioPlaying){const seconds=Math.floor((Date.now()-radioStartedAt+radioElapsed)/1000);$("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");$("#radio-progress").style.width=(seconds%60/60*100)+"%";$$("#radio-spectrum i").forEach(bar=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"))}},1000);
 
 
