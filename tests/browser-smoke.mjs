@@ -77,7 +77,7 @@ try{
   await page.locator("#browser-back").click();
   assert.ok((await page.locator("#browser-address").inputValue()).includes("webzone2000.com"),"browser back should restore previous page");
 
-  await page.locator("#global-sound-volume").fill("35");
+  await page.locator("#global-sound-volume").evaluate(el=>{el.value="35";el.dispatchEvent(new Event("input",{bubbles:true}));});
   assert.equal(await page.evaluate(()=>localStorage.getItem("webzone-sound-level")),"0.35","global sound volume should persist");
   await page.locator("[data-open='profile-window']").first().click();
   await page.locator("#profile-edit-name").fill("perfil_teste");
