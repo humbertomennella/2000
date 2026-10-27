@@ -334,3 +334,49 @@ body{margin:0;overflow-x:hidden}
 #chat-room-window .room-form{margin:7px}
 #chat-room-window>.micro{padding:0 7px 7px}
 .guest-homepage{display:block;overflow-wrap:anywhere;font:10px Tahoma;margin-top:4px}
+
+
+/* Desktop retrô, histórico do navegador e componentes responsivos */
+body{padding-bottom:42px}
+.desktop-icons{position:fixed;top:12px;left:12px;z-index:0;display:grid;gap:12px;color:#fff;text-shadow:1px 1px #000}
+.desktop-icons span{font-size:27px;filter:drop-shadow(1px 1px 0 #000)}
+.desktop-taskbar{position:fixed;left:0;right:0;bottom:0;height:38px;z-index:110;display:flex;align-items:center;gap:5px;padding:4px;background:linear-gradient(#d9d9d9,#a8a8a8);border-top:2px solid #fff;box-shadow:0 -1px 0 #666;font:11px Tahoma,Arial,sans-serif}
+.start-button{height:29px;flex:0 0 auto;padding:3px 10px;background:linear-gradient(#e8ffe8,#8bbd8b);border:2px outset #fff;font:bold 11px Tahoma;cursor:pointer}
+.start-button[aria-expanded="true"]{border-style:inset}
+.taskbar-apps{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto}
+.taskbar-app{height:27px;max-width:190px;min-width:65px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:3px 8px;background:#c9c9c9;border:2px outset #fff;font:11px Tahoma;cursor:pointer}
+.taskbar-app.is-active{background:#eee;border-style:inset;font-weight:bold}
+.taskbar-tray{height:28px;display:flex;align-items:center;gap:7px;flex:0 0 auto;padding:0 8px;border:2px inset #eee;background:#c9c9c9;font:11px Tahoma}
+.taskbar-tray time{font-variant-numeric:tabular-nums}
+.start-menu{position:fixed;left:4px;bottom:39px;z-index:115;width:min(265px,calc(100vw - 12px));padding:6px;background:#c0c0c0;border:3px outset #fff;box-shadow:5px 5px #0005;display:grid;gap:4px;font:12px Tahoma}
+.start-menu.hidden{display:none}
+.start-menu-brand{display:flex;align-items:center;justify-content:space-between;padding:12px 8px;background:linear-gradient(90deg,#000080,#1488c8);color:#fff;font-size:17px}
+.start-menu-brand span{font-size:25px;font-weight:bold;color:#ff0}
+.start-menu>button,.start-menu>a{display:block;text-align:left;padding:9px;background:#e4e4e4;border:2px outset #fff;color:#111;text-decoration:none;font:bold 11px Tahoma;cursor:pointer}
+.start-menu>button:hover,.start-menu>a:hover{background:#ffff99}
+.global-sound-control{display:flex;align-items:center;gap:6px;flex:1 1 230px;min-width:190px;font:bold 10px Tahoma}
+.global-sound-control input{min-width:50px;flex:1;accent-color:#000080}
+.global-sound-control span{min-width:30px;text-align:right;font-variant-numeric:tabular-nums}
+.radio-quickbar{align-items:center}
+.browser-bookmarks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:8px;background:#e5e5e5;border-bottom:2px ridge #fff}
+.browser-bookmarks[hidden]{display:none}
+.browser-bookmarks section{min-width:0}
+.browser-bookmarks section>b{display:block;margin-bottom:5px;color:#000080;font:bold 11px Tahoma}
+.browser-bookmarks section>div{display:grid;gap:4px}
+.browser-bookmarks button{min-width:0;text-align:left;padding:5px;background:#fff;border:1px solid #888;overflow-wrap:anywhere;font:11px Tahoma;cursor:pointer}
+.browser-bookmarks button:hover{background:#ffff99}
+.museum-toolbar{display:flex;align-items:center;gap:7px;margin-bottom:8px;font:bold 11px Tahoma}
+.museum-toolbar select{padding:5px;background:#fff;border:2px inset #ddd}
+.museum-exhibits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.museum-exhibit{min-width:0;padding:9px;background:#ffffee;border:3px ridge #fff;display:grid;gap:5px}
+.museum-exhibit .museum-year{font:bold 10px "Courier New",monospace;color:#a00080}
+.museum-exhibit h3{margin:0;color:#000080;font:bold 13px Tahoma}
+.museum-exhibit p{margin:0;font-size:12px;line-height:1.45}
+.museum-exhibit a{font:bold 11px Tahoma;color:#00e}
+.profile-edit-form{display:grid;gap:7px;text-align:left;margin:10px 0}
+.profile-edit-form label{display:grid;gap:3px;font:bold 11px Tahoma}
+.profile-edit-form input,.profile-edit-form select{width:100%;min-width:0;padding:6px;border:2px inset #fff;background:#fff;font:12px Tahoma}
+.profile-edit-form button,.profile-friends button{border:2px outset #fff;background:#ddd;padding:6px;font:11px Tahoma;cursor:pointer}
+.profile-friends{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
+@media(max-width:720px){.desktop-icons{top:5px;left:5px;gap:5px}.desktop-icons span{font-size:21px}.desktop-taskbar{height:36px;padding:3px;gap:3px}.start-button{height:28px;padding:2px 6px;font-size:10px}.taskbar-app{max-width:115px;min-width:48px;padding:3px 5px;font-size:10px}.taskbar-tray{gap:4px;padding:0 5px;font-size:10px}.start-menu{bottom:37px}.global-sound-control{flex-basis:100%;min-width:100%}.browser-tools{flex-wrap:wrap}.browser-tools input{flex:1 1 120px}.browser-tools button{min-height:28px}.browser-bookmarks,.museum-exhibits{grid-template-columns:minmax(0,1fr)}.museum-exhibit{padding:8px}.site-shell{margin-bottom:8px}}
+@media(max-width:420px){.taskbar-tray>span{display:none}.taskbar-app{max-width:82px}.browser-bookmarks{padding:5px}.ascii-logo{font-size:clamp(4px,1.45vw,10px);overflow:hidden}.masthead-top{flex-wrap:wrap;gap:4px}}
