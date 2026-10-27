@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000080">
+  <meta name="description" content="Uma viagem interativa pela internet, cultura e acontecimentos dos anos 90 e 2000.">
+  <title>WEB ZONE 2000 :: sua janela para o passado</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="desktop-icons" aria-hidden="true"><span>💾</span><span>🌐</span><span>📼</span></div>
+  <div class="site-shell">
+    <div class="browser-bar">
+      <span class="tiny-logo">🌐</span><span class="browser-title">WEB ZONE 2000 — Microsoft Internet Explorer</span>
+      <div class="window-controls"><button aria-label="Minimizar">_</button><button aria-label="Maximizar">□</button><button aria-label="Fechar">×</button></div>
+    </div>
+    <header class="masthead">
+      <div class="masthead-top"><span>★ DESDE 1999 ★</span><span id="visitor-date">CARREGANDO DATA...</span><span>BEST VIEWED AT 800×600</span></div>
+      <pre class="ascii-logo" aria-label="Web Zone 2000">██╗    ██╗███████╗██████╗     ███████╗ ██████╗ ███╗   ██╗███████╗
+██║    ██║██╔════╝██╔══██╗    ╚══███╔╝██╔═══██╗████╗  ██║██╔════╝
+██║ █╗ ██║█████╗  ██████╔╝      ███╔╝ ██║   ██║██╔██╗ ██║█████╗
+██║███╗██║██╔══╝  ██╔══██╗     ███╔╝  ██║   ██║██║╚██╗██║██╔══╝
+╚███╔███╔╝███████╗██████╔╝    ███████╗╚██████╔╝██║ ╚████║███████╗
+ ╚══╝╚══╝ ╚══════╝╚═════╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝</pre>
+      <p class="tagline">A INTERNET ERA OUTRA. <span>E VOCÊ ESTAVA LÁ.</span></p>
+      <div class="badge-row"><a class="badge badge-yellow" href="#timeline">★ VIAGEM NO TEMPO ★</a><a class="badge badge-pink" href="#memorias">Y2K INSIDE</a><a class="badge badge-blue" href="#guestbook">ASSINE O LIVRO!</a><span class="under-construction">🚧 SITE EM CONSTRUÇÃO 🚧</span></div>
+      <div class="marquee"><div>✦ BEM-VINDO À WEB ZONE 2000 ✦ MSN, ICQ, LAN HOUSE, DISCMAN, ORKUT, TAMAGOTCHI, MTV, LOCADORA E MUITO MAIS ✦ CLIQUE, EXPLORE E NÃO ESQUEÇA DE SALVAR NOS FAVORITOS ✦</div></div>
+    </header>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <a href="#inicio">🏠 HOME</a><a href="#timeline">📅 LINHA DO TEMPO</a><a href="#memorias">📼 MEMÓRIAS</a><a href="#galeria">🖼 GALERIA</a><a href="#guestbook">✍️ GUESTBOOK</a>
+    </nav>
+    <div class="content-grid" id="inicio">
+      <aside class="sidebar">
+        <section class="panel"><h2 class="panel-title">📁 NAVEGUE</h2><div class="panel-body nav-list"><a href="#noticias">📰 Notícias históricas</a><a href="#timeline">🕒 Linha do tempo</a><a href="#tecnologia">💻 Tecnologia</a><a href="#cultura">🎧 Cultura pop</a><a href="#jogos">🎮 Games</a><a href="#brasil">🇧🇷 Brasil</a><a href="#guestbook">📖 Livro de visitas</a></div></section>
+        <section class="panel"><h2 class="panel-title">🖥️ STATUS DO SISTEMA</h2><div class="panel-body system-status"><div><span class="led"></span> Conexão: <b id="connection-status">desconectado</b></div><div>Velocidade: <b>56 kbps</b></div><div>Navegador: <b>IE 6.0</b></div><div>Resolução: <b>800 × 600</b></div><button id="connect-btn" class="retro-button">Conectar à internet</button><p class="micro">♪ *som imaginário de modem discado*</p></div></section>
+        <section class="panel"><h2 class="panel-title">🎲 FATO ALEATÓRIO</h2><div class="panel-body"><p id="random-fact">Em 1999, muita gente temia que o bug do milênio apagasse os computadores.</p><button id="fact-btn" class="retro-button">Outro fato!</button></div></section>
+        <section class="panel mini-panel"><h2 class="panel-title">💌 CARTÃO POSTAL</h2><div class="panel-body postcard"><div class="postcard-stamp">SAUDADE<br>★ 2000 ★</div><p>Você se lembra de esperar a página carregar linha por linha?</p><span>Abraços da internet antiga!</span></div></section>
+        <div class="counter-box">VOCÊ É O VISITANTE Nº<br><strong id="visitor-count">000184</strong><br><span>desde 01/01/2000</span></div>
+      </aside>
+      <main class="main-column">
+        <section class="welcome-box panel"><h2 class="panel-title">✨ VOCÊ ENTROU NA WEB ZONE!</h2><div class="panel-body"><div class="welcome-flex"><div class="pixel-computer">🖥️</div><div><p><b>Prepare-se para voltar no tempo.</b></p><p>Um arquivo vivo das décadas que popularizaram a internet, mudaram a música, os jogos, o cinema e o jeito de conversar.</p><p class="blink">★ ATUALIZADO: OUTUBRO DE 2026 ★</p></div></div><div class="quick-links"><button data-open="browser-window">🌐 Abrir navegador antigo</button><button data-open="messenger-window">💬 Abrir mensageiro</button><button data-open="profile-window">👤 Meu perfil</button></div></div></section>
+        <section class="panel" id="noticias"><h2 class="panel-title">📰 NOTÍCIAS QUE MUDARAM O MUNDO</h2><div class="panel-body"><div class="filter-row"><label for="news-filter">Categoria:</label><select id="news-filter"><option value="all">Todas</option><option value="world">Mundo</option><option value="tech">Tecnologia</option><option value="br">Brasil</option><option value="pop">Cultura pop</option></select><label for="year-filter">Década:</label><select id="year-filter"><option value="all">Todas</option><option value="90">Anos 90</option><option value="00">Anos 2000</option></select></div><div id="news-grid" class="news-grid"></div><p class="micro">Conteúdo histórico resumido. Cada cartão abre detalhes e fontes para continuar a pesquisa.</p></div></section>
+        <section class="panel" id="timeline"><h2 class="panel-title">🕒 MÁQUINA DO TEMPO: 1990–2009</h2><div class="panel-body"><div class="decade-switch"><button class="active" data-decade="all">1990–2009</button><button data-decade="90">ANOS 90</button><button data-decade="00">ANOS 2000</button></div><div id="timeline-list" class="timeline-list"></div></div></section>
+        <section class="panel" id="memorias"><h2 class="panel-title">📼 COISAS QUE A INTERNET NÃO ESQUECE</h2><div class="panel-body memory-grid">
+          <article class="memory-card"><div class="memory-icon">💿</div><h3>Era do CD gravado</h3><p>“Mix_final_agora_vai_03.mp3” e uma caneta permanente. Organização impecável.</p><button data-memory="cd">Relembrar</button></article>
+          <article class="memory-card"><div class="memory-icon">💬</div><h3>MSN Messenger</h3><p>Status personalizado, subnick dramático, emoticons gigantes e chamar a atenção de alguém.</p><button data-open="messenger-window">Abrir MSN</button></article>
+          <article class="memory-card"><div class="memory-icon">📱</div><h3>Celular tijolão</h3><p>Snake, toque polifônico, SMS contado e bateria que parecia durar uma semana.</p><button data-memory="phone">Relembrar</button></article>
+          <article class="memory-card"><div class="memory-icon">🎮</div><h3>Lan house</h3><p>Counter-Strike, Ragnarok, World of Warcraft e a discussão eterna sobre quem era o próximo.</p><button data-memory="lan">Relembrar</button></article>
+          <article class="memory-card"><div class="memory-icon">📟</div><h3>Orkut & scraps</h3><p>Depoimento era quase um contrato de amizade. Comunidades definiam sua personalidade.</p><button data-memory="orkut">Relembrar</button></article>
+          <article class="memory-card"><div class="memory-icon">📺</div><h3>TV e locadora</h3><p>Programar o videocassete, rebobinar a fita e torcer para o filme ainda estar disponível.</p><button data-memory="vhs">Relembrar</button></article>
+        </div></div></section>
+        <section class="panel" id="tecnologia"><h2 class="panel-title">💾 TECNOLOGIA: DO DISQUETE AO YOUTUBE</h2><div class="panel-body tech-strip"><div><b>1991</b><span>World Wide Web pública</span></div><div><b>1998</b><span>Google é fundado</span></div><div><b>1999</b><span>MSN Messenger chega</span></div><div><b>2001</b><span>Wikipedia é lançada</span></div><div><b>2004</b><span>Facebook começa</span></div><div><b>2005</b><span>YouTube é lançado</span></div><div><b>2007</b><span>iPhone é apresentado</span></div></div><p class="micro">A web não nasceu nos anos 90, mas foi nessa década que começou a entrar nas casas de milhões de pessoas.</p></div></section>
+        <section class="panel" id="cultura"><h2 class="panel-title">🎧 CULTURA POP: A TRILHA SONORA</h2><div class="panel-body"><div class="culture-list"><button data-culture="90">📻 Pop e rock dos anos 90</button><button data-culture="00">🎤 Pop, emo e hip-hop dos anos 2000</button><button data-culture="tv">📺 TV, desenhos e seriados</button><button data-culture="cinema">🎬 Cinema e franquias</button></div><div id="culture-detail" class="culture-detail">Escolha um tema para abrir uma cápsula cultural.</div></div></section>
+        <section class="panel" id="galeria"><h2 class="panel-title">🖼️ GALERIA DE UMA ÉPOCA</h2><div class="panel-body"><div class="gallery-grid">
+          <a href="https://commons.wikimedia.org/wiki/Category:Compact_discs" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1612872915981-6d5b5a7e5c2a?auto=format&fit=crop&w=500&q=80" alt="Discos compactos"><span>CDs e música</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Floppy_disks" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=500&q=80" alt="Computador antigo"><span>Computadores</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Video_cassette_recorders" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="Televisão e vídeo"><span>TV e vídeo</span></a>
+          <a href="https://commons.wikimedia.org/wiki/Category:Mobile_phones" target="_blank" rel="noopener"><img loading="lazy" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80" alt="Telefone celular"><span>Celulares</span></a>
+        </div><p class="micro">As imagens são carregadas de serviços externos. Os links levam a categorias de referência para aprofundar a pesquisa.</p></div></section>
+      </main>
+      <aside class="sidebar right-sidebar">
+        <section class="panel"><h2 class="panel-title">📟 MEU STATUS</h2><div class="panel-body status-editor"><label for="mood-select">Como você está?</label><select id="mood-select"><option>ouvindo música 🎧</option><option>no ICQ 🟢</option><option>baixando MP3 💿</option><option>jogando CS 🎮</option><option>sumido(a) por aí 🌙</option></select><label for="nickname">Seu nick:</label><input id="nickname" maxlength="20" value="visitante_2000"><button id="save-profile" class="retro-button">Atualizar status</button><p id="profile-preview" class="profile-preview">visitante_2000 está ouvindo música 🎧</p></div></section>
+        <section class="panel" id="jogos"><h2 class="panel-title">🎮 ARCADE DA WEB</h2><div class="panel-body"><p>Teste seus reflexos no minigame mais simples da história.</p><div id="reaction-game" class="reaction-game"><span>Clique em INICIAR e aguarde o verde.</span></div><button id="game-start" class="retro-button">Iniciar jogo</button><p id="game-result" class="micro">Recorde salvo neste navegador.</p></div></section>
+        <section class="panel"><h2 class="panel-title">🔗 WEBRING</h2><div class="panel-body webring"><p>Você está no <b>Retro Web Ring</b>.</p><button id="ring-prev">◀ Anterior</button><button id="ring-next">Próximo ▶</button><p id="ring-label">Site 01 de 05: Nostalgia Digital</p></div></section>
+        <section class="panel"><h2 class="panel-title">📨 RECADINHO</h2><div class="panel-body"><p>Tem uma lembrança boa dessa época?</p><button data-open="guestbook-window" class="retro-button">Deixar um recado</button><button data-open="secret-window" class="retro-button">Não clique aqui</button></div></section>
+        <div class="web-badges"><div class="fake-badge">🌐<br>BEST VIEWED<br>IN IE 6</div><div class="fake-badge hot">🔥<br>HOT SITE<br>2003</div><div class="fake-badge">💾<br>100% HTML<br>ENERGY</div><div class="fake-badge rainbow">🌈<br>UNDER<br>CONSTRUCTION</div></div>
+      </aside>
+    </div>
+    <footer><p>© 2000–2026 WEB ZONE 2000 · Feito com HTML, CSS, JavaScript e saudade de uma internet que demorava para carregar.</p><p><a href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a> · <a href="https://www.webdesignmuseum.org/" target="_blank" rel="noopener">Web Design Museum</a> · <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a></p><p class="footer-small">Este é um projeto de nostalgia e educação histórica. Não é afiliado à Microsoft, ICQ, MSN ou às marcas citadas.</p></footer>
+  </div>
+  <div id="window-layer" aria-live="polite">
+    <section class="floating-window hidden" id="browser-window" role="dialog" aria-label="Navegador antigo"><div class="floating-title" data-drag="browser-window"><span>🌐 Internet Explorer 6</span><button data-close="browser-window">×</button></div><div class="browser-tools"><button id="browser-back">◀</button><button id="browser-forward">▶</button><button id="browser-home">🏠</button><input id="browser-address" value="http://www.webzone2000.com/" aria-label="Endereço"><button id="browser-go">Ir</button></div><div id="browser-page" class="browser-page"><h2>Bem-vindo à Web Zone!</h2><p>Este navegador é uma brincadeira local. Escolha um endereço:</p><button data-page="home">webzone2000.com</button><button data-page="chat">msn-messenger.net</button><button data-page="history">arquivo-historico.org</button><div class="fake-page-content">Conectado a 56 kbps<br>Pronto para explorar.</div></div></section>
+    <section class="floating-window hidden" id="messenger-window" role="dialog" aria-label="Mensageiro antigo"><div class="floating-title" data-drag="messenger-window"><span>💬 MSN Messenger 7.5</span><button data-close="messenger-window">×</button></div><div class="messenger-head"><b>Lista de contatos</b><span>🟢 Online</span></div><div class="contacts"><button data-contact="Bia_xD">🟢 Bia_xD <small>ouvindo Avril Lavigne</small></button><button data-contact="Gui_Cs">🟢 Gui_Cs <small>jogando Counter-Strike</small></button><button data-contact="dark_angel">🌙 dark_angel <small>ocupado</small></button><button data-contact="maahh">🟡 maahh <small>ausente</small></button></div><div id="chat-log" class="chat-log"><p><b>Sistema:</b> Selecione um contato para conversar.</p></div><form id="chat-form" class="chat-form"><input id="chat-input" maxlength="180" placeholder="Digite sua mensagem..." aria-label="Mensagem"><button>Enviar</button></form><p class="micro">Simulação local: nenhuma mensagem é enviada a pessoas reais.</p></section>
+    <section class="floating-window hidden" id="profile-window" role="dialog" aria-label="Meu perfil"><div class="floating-title" data-drag="profile-window"><span>👤 Meu espaço pessoal</span><button data-close="profile-window">×</button></div><div class="profile-window-body"><div class="avatar">😎</div><h2>Meu perfil da web</h2><p>♪ música atual: <span id="profile-music">qualquer MP3 de 4 MB</span></p><p>Frase: “a vida é feita de pixels”</p><p>Amigos: 127 · Recados: 24 · Depoimentos: 8</p><button id="change-avatar">Trocar avatar</button></div></section>
+    <section class="floating-window hidden" id="guestbook-window" role="dialog" aria-label="Livro de visitas"><div class="floating-title" data-drag="guestbook-window"><span>✍️ Livro de visitas</span><button data-close="guestbook-window">×</button></div><div class="guestbook-body"><p>Deixe um recado para o próximo visitante.</p><form id="guestbook-form"><label>Seu nome <input id="guest-name" maxlength="28" required placeholder="Seu nick"></label><label>Recado <textarea id="guest-message" maxlength="220" required placeholder="Saudades do ICQ..."></textarea></label><button>Assinar guestbook</button></form><div id="guestbook-entries"></div><p class="micro">Os recados ficam apenas neste navegador.</p></div></section>
+    <section class="floating-window hidden" id="secret-window" role="dialog" aria-label="Página secreta"><div class="floating-title" data-drag="secret-window"><span>🔒 Área secreta</span><button data-close="secret-window">×</button></div><div class="secret-body"><h2>VOCÊ ACHOU!</h2><pre>  (\_/)
+  (o.o)  <3
+  (> <)  segredo desbloqueado!</pre><p>Você desbloqueou a página secreta. Sua recompensa é uma dose extra de nostalgia.</p><button id="secret-confetti">Fazer festa</button></div></section>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
