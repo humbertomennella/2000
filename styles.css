@@ -306,7 +306,7 @@ body{margin:0;overflow-x:hidden}
 .mood-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
 .mood-buttons button{min-width:0;background:#ffffee;border:2px outset #fff;padding:6px 4px;font:10px Tahoma;cursor:pointer}
 .mood-buttons button.active{background:#ffff00;border-style:inset;font-weight:bold}
-.full-guestbook{grid-column:2}.full-guestbook .guestbook-body{display:grid;gap:9px}
+.full-guestbook{grid-column:auto}.full-guestbook .guestbook-body{display:grid;gap:9px}
 #guestbook-form{display:grid;grid-template-columns:minmax(140px,.7fr) minmax(0,1.6fr) auto;gap:8px;align-items:end}
 #guestbook-form label{display:grid;gap:4px;font:bold 11px Tahoma}
 #guestbook-form input,#guestbook-form textarea{width:100%;min-width:0;padding:7px;background:#fff}
@@ -316,3 +316,13 @@ body{margin:0;overflow-x:hidden}
 .guest-entry{min-width:0;background:#ffffee;border:2px ridge #fff;padding:8px;overflow-wrap:anywhere}
 .guest-entry b{color:#000080;font:bold 11px Tahoma}.guest-entry p{margin:6px 0;font-size:12px}.guest-entry small{font-size:10px;color:#555}
 @media(max-width:720px){.room-form{grid-template-columns:minmax(0,1fr) auto}.room-form #room-nudge{grid-column:1/-1}.full-guestbook{grid-column:1}.full-guestbook #guestbook-form{grid-template-columns:minmax(0,1fr)}.guestbook-entries{grid-template-columns:minmax(0,1fr)}}
+
+/* Original Web Zone mood card and proper guestbook placement */
+.mood-face{min-height:48px;text-align:center;font-size:35px;line-height:1.3;color:#000080}
+#meu-humor .panel-body{display:grid;gap:7px}
+#meu-humor #mood-select{width:100%;min-width:0;padding:6px}
+#meu-humor #mood-save{width:100%}
+.full-guestbook{width:100%;min-width:0}
+.full-guestbook .guestbook-body{min-width:0}
+#guestbook-form{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) auto}
+@media(max-width:720px){#guestbook-form{grid-template-columns:minmax(0,1fr)}}
