@@ -243,3 +243,23 @@ body{margin:0;overflow-x:hidden}
  .geek-card img{height:150px;min-height:0}
  .winamp-transport button{width:38px}
 }
+
+
+/* Detalhes finais do portal retro e banners 88x31 */
+.banner-strip{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;padding:7px;background:#c0c0c0;border-bottom:3px ridge #fff}
+.banner88{display:inline-flex;align-items:center;justify-content:center;width:88px;height:31px;max-width:88px;border:2px outset #fff;padding:2px;text-align:center;text-decoration:none!important;font:bold 8px "Courier New",monospace;line-height:1.1;box-shadow:1px 1px #333;color:#fff}
+.banner88:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.banner-blue{background:linear-gradient(135deg,#000066,#00aaff)}
+.banner-green{background:linear-gradient(135deg,#003300,#00aa33);color:#ff0}
+.banner-pink{background:linear-gradient(135deg,#600060,#ff00aa)}
+.banner-yellow{background:linear-gradient(135deg,#ff0,#ff8800);color:#000}
+.banner-purple{background:linear-gradient(135deg,#200050,#aa55ff)}
+.banner-red{background:linear-gradient(135deg,#600,#f33)}
+.radio-external{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#000!important}
+.winamp-shell.is-playing .winamp-spectrum i{animation:spectrum .45s steps(4,end) infinite alternate}
+.winamp-shell.is-playing .winamp-spectrum i:nth-child(3n){animation-delay:.12s}
+.winamp-shell.is-playing .winamp-spectrum i:nth-child(4n){animation-delay:.22s}
+#radio-player.is-playing .winamp-spectrum i{animation:none}
+.messenger-window.nudge-shake{animation:msnNudge .12s linear 5}
+@keyframes msnNudge{0%,100%{translate:0 0}25%{translate:-5px 0}75%{translate:5px 0}}
+@media(max-width:720px){.banner-strip{gap:4px;padding:5px}.banner88{width:88px;height:31px}}
