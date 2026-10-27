@@ -263,3 +263,13 @@ body{margin:0;overflow-x:hidden}
 .messenger-window.nudge-shake{animation:msnNudge .12s linear 5}
 @keyframes msnNudge{0%,100%{translate:0 0}25%{translate:-5px 0}75%{translate:5px 0}}
 @media(max-width:720px){.banner-strip{gap:4px;padding:5px}.banner88{width:88px;height:31px}}
+
+
+/* Arquivo histórico: referências legíveis sem quebrar a grade retrô */
+.archive-intro{font-size:12px;line-height:1.55;margin:0 0 9px}
+.archive-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.archive-links a{display:block;min-width:0;padding:8px;background:#ffffee;border:2px outset #fff;color:#000080;text-decoration:underline;overflow-wrap:anywhere}
+.archive-links a:hover{background:#ffff00}
+.archive-links b{display:block;font:bold 11px Tahoma;margin-bottom:4px}
+.archive-links span{display:block;font:11px/1.4 "Times New Roman",serif;color:#222}
+@media(max-width:720px){.archive-links{grid-template-columns:minmax(0,1fr)}}
