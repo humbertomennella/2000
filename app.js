@@ -331,8 +331,9 @@
   });
 
   const guestKey = "webzone_guests";
+  const legacyGuestKey = "webzone-guestbook";
   function renderGuestbook() {
-    const entries = storage.get(guestKey, []);
+    const entries = storage.get(guestKey, storage.get(legacyGuestKey, []));
     const container = $("#guestbook-entries"); container.replaceChildren();
     entries.slice(-6).reverse().forEach(entry => {
       const div = document.createElement("div"); div.className = "guest-entry";
@@ -348,7 +349,7 @@
     e.preventDefault();
     const name = $("#guest-name").value.trim(), url = $("#guest-url").value.trim(), message = $("#guest-message").value.trim();
     if (!name || !message) return;
-    const entries = storage.get(guestKey, []);
+    const entries = storage.get(guestKey, storage.get(legacyGuestKey, []));
     entries.push({name:name.slice(0,30),url:url.slice(0,100),message:message.slice(0,300),date:new Date().toLocaleDateString("pt-BR")});
     storage.set(guestKey, entries.slice(-30)); $("#guestbook-form").reset(); renderGuestbook(); toast("Sua assinatura foi registrada neste navegador!");
   });
