@@ -324,7 +324,7 @@ body{margin:0;overflow-x:hidden}
 #meu-humor #mood-save{width:100%}
 .full-guestbook{width:100%;min-width:0}
 .full-guestbook .guestbook-body{min-width:0}
-#guestbook-form{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) auto}
+#guestbook-form{grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(0,1.5fr) auto}
 @media(max-width:720px){#guestbook-form{grid-template-columns:minmax(0,1fr)}}
 
 /* Floating public chat room restored from the original single-file version */
