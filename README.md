@@ -39,3 +39,15 @@ A intenção não é transformar tudo em neon synthwave moderno. A estética usa
 3. Adicionar páginas por ano e páginas de cultura (música, TV, cinema, games e tecnologia).
 4. Implementar busca geral e favoritos persistentes.
 5. Se houver necessidade real de colaboração entre visitantes, desenhar schema e políticas de acesso do Supabase antes de conectar um banco.
+
+
+## Experiência interativa atualizada
+
+- Desktop inspirado no Windows 98/XP com menu Iniciar, barra de tarefas, relógio e restauração de janelas minimizadas.
+- Efeitos sonoros com volume global persistente, separado do volume da rádio.
+- Navegador fictício com histórico persistente e favoritos locais.
+- Museu interativo com filtro por período e links para acervos históricos.
+- Perfil personalizável com avatar, status, música, frase e atalhos para contatos.
+- Layout adaptado para telas menores; a estética retrô preserva janelas, painéis e botões sem exigir resolução 800×600.
+
+Histórico, favoritos, preferências e perfil ficam no navegador local. A interface de chat precisa ser verificada contra a configuração de backend antes de ser descrita como chat multiusuário funcional.
