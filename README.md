@@ -51,3 +51,22 @@ A intenção não é transformar tudo em neon synthwave moderno. A estética usa
 - Layout adaptado para telas menores; a estética retrô preserva janelas, painéis e botões sem exigir resolução 800×600.
 
 Histórico, favoritos, preferências e perfil ficam no navegador local. A interface de chat precisa ser verificada contra a configuração de backend antes de ser descrita como chat multiusuário funcional.
+
+
+## Comunidade compartilhada (Supabase)
+
+A base para a comunidade multiusuário está em `supabase/migrations/` e `supabase/functions/community-post/`:
+- Chat público com mensagens em tempo real e presença de visitantes.
+- Livro de visitas compartilhado, com URLs validadas.
+- Escritas feitas por Edge Function; o navegador não recebe a chave administrativa.
+- RLS ativa; visitantes só leem conteúdo aprovado.
+- Limites de frequência, validação de tamanho e retenção automática de publicações suspeitas para moderação.
+- A chave `service_role` nunca deve ser publicada no site.
+
+### Ativação
+1. Aplicar a migração SQL no Supabase.
+2. Implantar a função `community-post` e configurar o segredo `RATE_LIMIT_SALT`.
+3. Preencher `community-config.js` com a URL do projeto e a chave publishable/anon.
+4. Testar publicações a partir de dois navegadores.
+
+Até as credenciais serem configuradas, o site mantém o modo local. Estes arquivos, sozinhos, não significam que um backend de produção já esteja ativo.
