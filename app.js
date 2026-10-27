@@ -403,7 +403,7 @@
       radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;setRadioPlaying(false);
     }
   }
-  $("#radio-station").addEventListener("change",()=>{const resume=radioPlaying||(!radioAudio.paused&&!radioAudio.ended);radioGenre=$("#radio-station").value;radioElapsed=0;radioStartedAt=Date.now();$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(resume);blip(740,.08,.035)});
+  $("#radio-station").addEventListener("change",()=>{const resume=radioWantsPlayback||radioPlaying||(!radioAudio.paused&&!radioAudio.ended);radioGenre=$("#radio-station").value;radioElapsed=0;radioStartedAt=Date.now();$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(resume);blip(740,.08,.035)});
   $("#radio-play").addEventListener("click",()=>{
     const station=radioStations[radioGenre];
     if(station.type==="embed"){radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;toast("Use PLAY dentro do player da rádio incorporada.");return}
