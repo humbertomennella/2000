@@ -79,6 +79,11 @@ try{
 
   await page.locator("#global-sound-volume").evaluate(el=>{el.value="35";el.dispatchEvent(new Event("input",{bubbles:true}));});
   assert.equal(await page.evaluate(()=>localStorage.getItem("webzone-sound-level")),"0.35","global sound volume should persist");
+  await page.locator("#radio-station").selectOption("nineties");
+  assert.ok((await page.locator("#radio-track-title").innerText()).includes("Rádio Energia Dance"),"radio station label should update");
+  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem("webzone-radio-station"))),"nineties","radio station should persist");
+  await page.locator("#radio-volume").evaluate(el=>{el.value="27";el.dispatchEvent(new Event("input",{bubbles:true}));});
+  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem("webzone-radio-volume"))),27,"radio volume should persist");
   await page.locator(".quick-links [data-open='profile-window']").click();
   await page.locator("#profile-edit-name").fill("perfil_teste");
   await page.locator("#profile-quote").fill("frase de teste");
