@@ -480,7 +480,15 @@
     games:{label:"Yumi Co. Radio · stream alternativo",type:"audio",url:"https://yumicoradio.net/stream_aac64",fallback:"https://yumicoradio.net/stream_128",era:"FUTURE FUNK · VAPORWAVE · CITY POP"},
     br:{label:"Fita Cassete · flashback",type:"audio",url:"https://server01.ouvir.radio.br:8018/stream",era:"FLASHBACK · CLÁSSICOS DE VÁRIAS DÉCADAS"}
   };
-  let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0,radioWantsPlayback=false;
+  const radioStationSelect=$("#radio-station");
+  const savedRadioGenre=storage.get("webzone-radio-station","vapor");
+  if(radioStations[savedRadioGenre])radioStationSelect.value=savedRadioGenre;
+  const radioVolumeInput=$("#radio-volume");
+  const savedRadioVolume=Number(storage.get("webzone-radio-volume",42));
+  const radioVolume=Math.max(0,Math.min(100,Number.isFinite(savedRadioVolume)?savedRadioVolume:42));
+  radioVolumeInput.value=String(radioVolume);
+  $("#radio-volume-value").textContent=radioVolume+"%";
+  let radioGenre=radioStationSelect.value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0,radioWantsPlayback=false;
   const radioAudio=$("#radio-audio"),radioEmbed=$("#radio-embed"),radioNote=$("#radio-player-note");
   function setRadioInfo(){
     const station=radioStations[radioGenre];
@@ -506,7 +514,12 @@
       radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;setRadioPlaying(false);
     }
   }
-  $("#radio-station").addEventListener("change",()=>{const resume=radioWantsPlayback||radioPlaying||(!radioAudio.paused&&!radioAudio.ended);radioGenre=$("#radio-station").value;radioElapsed=0;radioStartedAt=Date.now();$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(resume);blip(740,.08,.035)});
+  radioStationSelect.addEventListener("change",()=>{
+    const resume=radioWantsPlayback||radioPlaying||(!radioAudio.paused&&!radioAudio.ended);
+    radioGenre=radioStationSelect.value;storage.set("webzone-radio-station",radioGenre);
+    radioElapsed=0;radioStartedAt=Date.now();$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";
+    tuneRadio(resume);blip(740,.08,.035);
+  });
   $("#radio-play").addEventListener("click",()=>{
     const station=radioStations[radioGenre];
     if(station.type==="embed"){radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;toast("Use PLAY dentro do player da rádio incorporada.");return}
@@ -516,10 +529,25 @@
   $("#radio-stop").addEventListener("click",()=>{radioWantsPlayback=false;radioAudio.pause();radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";setRadioPlaying(false);radioNote.hidden=false;radioNote.innerHTML="♫ TRANSMISSÃO PAUSADA<br><small>Escolha uma estação e aperte PLAY.</small>"});
   $("#radio-next").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+1)%s.options.length;s.dispatchEvent(new Event("change"))});
   $("#radio-prev").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+s.options.length-1)%s.options.length;s.dispatchEvent(new Event("change"))});
-  $("#radio-volume").addEventListener("input",e=>{const v=Number(e.target.value);$("#radio-volume-value").textContent=v+"%";radioAudio.volume=v/100});
+  radioVolumeInput.addEventListener("input",e=>{
+    const v=Math.max(0,Math.min(100,Number(e.target.value)));
+    $("#radio-volume-value").textContent=v+"%";radioAudio.volume=v/100;storage.set("webzone-radio-volume",v);
+  });
   radioAudio.addEventListener("playing",()=>setRadioPlaying(true));
   radioAudio.addEventListener("pause",()=>{if(radioPlaying)setRadioPlaying(false)});
-  radioAudio.addEventListener("error",()=>{if(radioAudio.hidden)return;const station=radioStations[radioGenre];if(station.fallback&&radioAudio.dataset.fallbackUsed!=="yes"){radioAudio.dataset.fallbackUsed="yes";radioAudio.src=station.fallback;radioAudio.load();if(radioWantsPlayback)radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>{setRadioPlaying(false);toast("A estação não iniciou. Troque de estação para continuar.");});return;}setRadioPlaying(false);toast("A transmissão não respondeu. Troque de estação para continuar.");});
+  radioAudio.addEventListener("error",()=>{
+    if(radioAudio.hidden)return;
+    const station=radioStations[radioGenre];
+    if(station.fallback&&radioAudio.dataset.fallbackUsed!=="yes"){
+      radioAudio.dataset.fallbackUsed="yes";radioAudio.src=station.fallback;radioAudio.load();
+      if(radioWantsPlayback)radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>{
+        setRadioPlaying(false);$("#radio-status").textContent="ERROR · "+station.label.toUpperCase();toast("A estação e seu stream alternativo não responderam.");
+      });
+      return;
+    }
+    setRadioPlaying(false);$("#radio-status").textContent="ERROR · "+station.label.toUpperCase();
+    toast("A transmissão não respondeu. Troque de estação para continuar.");
+  });
   $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
   if (soundVolumeInput) soundVolumeInput.addEventListener("input", e => {
