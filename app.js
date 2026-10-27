@@ -275,7 +275,7 @@
   });
   document.addEventListener("click",e=>{
     if(!startMenu||!startButton||startMenu.classList.contains("hidden"))return;
-    if(!startMenu.contains(e.target)&&e.target!==startButton){startMenu.classList.add("hidden");startButton.setAttribute("aria-expanded","false");}
+    if(!startMenu.contains(e.target)&&!startButton.contains(e.target)){startMenu.classList.add("hidden");startButton.setAttribute("aria-expanded","false");}
   });
   $("[data-start-radio]").forEach(link=>link.addEventListener("click",()=>{
     $("#radio").scrollIntoView({behavior:"smooth",block:"start"});if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");
