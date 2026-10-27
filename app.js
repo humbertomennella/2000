@@ -438,6 +438,12 @@
     if(radioPlaying){pauseRadio();startRadio();}
   });
   $("#radio-play").addEventListener("click",()=>radioPlaying?pauseRadio():startRadio());
+  $("#radio-skin-toggle").addEventListener("click",()=>{
+    const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");
+    $("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";
+    $("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";
+    blip(wmp?920:640,.09,.05);
+  });
   $("#radio-stop").addEventListener("click",stopRadio);
   $("#radio-next").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
   $("#radio-prev").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+$("#radio-station").options.length-1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
