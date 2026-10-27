@@ -67,3 +67,58 @@ input,select,textarea{border-radius:0!important}
   .content-grid{background:#bdbdbd}
   .main-nav a{font-family:Arial,Helvetica,sans-serif}
 }
+
+
+/* RÁDIO, GEEK ZONE, BANNERS E POP-UP */
+.radio-console{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,1fr);gap:10px;background:#777;padding:8px;border:4px ridge #eee}
+.radio-screen{background:#061406;color:#55ff55;border:4px inset #aaa;padding:12px;min-width:0;font-family:"Courier New",monospace}
+.radio-live{font-size:10px;letter-spacing:1px;color:#9f9}
+.radio-led{display:inline-block;width:8px;height:8px;border-radius:50%;background:#f33;box-shadow:0 0 7px #f33;margin-right:5px;animation:radioBlink 1s steps(2,start) infinite}
+.radio-brand{font-size:clamp(24px,4vw,40px);font-weight:bold;letter-spacing:2px;margin:12px 0 4px;text-shadow:2px 2px #008000}
+.radio-brand span{color:#ffff00}
+.radio-track-title{font-size:13px;line-height:1.4;color:#fff;min-height:36px}
+.radio-track-era{font-size:10px;color:#8f8;margin-top:5px}
+.equalizer{display:flex;align-items:end;gap:4px;height:36px;margin-top:10px;border-bottom:1px solid #285528}
+.equalizer i{display:block;width:6%;height:var(--h,40%);background:#00ff66;box-shadow:0 0 5px #00ff66}
+.equalizer i:nth-child(3n){--h:85%}.equalizer i:nth-child(4n){--h:55%}.equalizer i:nth-child(5n){--h:100%}.equalizer i:nth-child(2n){--h:30%}
+.radio-controls{display:flex;flex-direction:column;justify-content:center;gap:8px;background:#c0c0c0;border:3px ridge #fff;padding:10px;font-size:12px}
+.radio-controls select{width:100%;padding:7px;background:#fff;border:2px inset #ddd;font:12px Tahoma}
+.radio-actions{display:flex;gap:5px;flex-wrap:wrap}
+.radio-actions button{flex:1}
+.radio-playlist{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.radio-track{background:#ffffc8;border:2px outset #fff;padding:7px 9px;text-align:left;font:11px Tahoma;cursor:pointer;max-width:100%}
+.radio-track strong{display:block;color:#000080;font-size:12px}
+.radio-track span{display:block;color:#444;margin-top:3px}
+.radio-track.active{background:#000080;color:#fff;border-style:inset}
+.radio-track.active strong,.radio-track.active span{color:#fff}
+.radio-player{background:#111;color:#0f0;border:4px ridge #fff;padding:8px;min-height:100px}
+.radio-player iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+.radio-placeholder{text-align:center;padding:20px 8px;font:14px "Courier New",monospace;line-height:1.8}
+.radio-placeholder small{font-size:10px;color:#9f9}
+.geek-banner{background:#000;color:#0f0;border:4px ridge #fff;padding:12px;text-align:center;font:bold 18px "Courier New",monospace;text-shadow:2px 2px #f0f;margin-bottom:10px}
+.geek-banner span{display:block;color:#ff0;font-size:10px;letter-spacing:1px;margin-top:6px;text-shadow:none}
+.geek-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.geek-card{display:grid;grid-template-columns:42% minmax(0,1fr);background:#fffff4;border:3px ridge #fff;min-width:0}
+.geek-card img{width:100%;height:100%;min-height:145px;object-fit:cover;background:#ddd}
+.geek-card div{padding:9px}
+.geek-card b{font:bold 12px Arial,sans-serif;color:#000080}
+.geek-card p{font-size:12px;line-height:1.45;margin:7px 0}
+.geek-card span{font:bold 9px "Courier New",monospace;color:#b0007d}
+.geek-facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:10px}
+.geek-facts div{background:#ffff00;border:3px outset #fff;padding:8px 5px;text-align:center}
+.geek-facts strong{display:block;color:#b00000;font:bold 17px "Courier New",monospace}
+.geek-facts span{display:block;font-size:10px;line-height:1.35;margin-top:5px}
+.popup-overlay{z-index:100}
+.popup-overlay.hidden{display:none}
+.retro-popup{background:#0008}
+.retro-popup .popup-card{border:4px ridge #fff;padding:0 0 12px;font-family:Tahoma,Arial,sans-serif}
+.popup-titlebar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:linear-gradient(90deg,#000066,#0000cc,#7b00a8);color:#fff;font:bold 12px Tahoma;padding:5px}
+.popup-titlebar button{width:23px;height:22px;border:3px outset #fff;background:#c0c0c0;font-weight:bold;cursor:pointer}
+.retro-popup .popup-card h3{margin:0;padding:10px;background:#ffff00;color:#000;text-align:center;border-bottom:3px ridge #fff}
+.popup-art{text-align:center;font-size:36px;padding:8px}
+.retro-popup .popup-card p{font-size:12px;line-height:1.45;margin:8px 14px}
+.popup-buttons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px}
+.popup-buttons button{border:3px outset #fff;background:#c0c0c0;padding:7px 10px;font:bold 11px Tahoma;cursor:pointer}
+.retro-popup .popup-card small{display:block;color:#555;text-align:center;font-size:9px;margin:0 12px}
+@keyframes radioBlink{to{opacity:.25}}
+@media(max-width:760px){.radio-console{grid-template-columns:1fr}.geek-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.geek-grid{grid-template-columns:1fr}.geek-card img{min-height:130px}}
