@@ -370,13 +370,13 @@
 
   // Rádio real: streams ao vivo dentro da página, sem sintetizador e sem links para busca.
   const radioStations = {
-    vapor:{label:"SomaFM Vaporwaves · vaporwave real",type:"audio",url:"https://ice5.somafm.com/vaporwaves-128-mp3",era:"VAPORWAVE · SOMAFM · AO VIVO"},
+    vapor:{label:"SomaFM Vaporwaves · vaporwave real",type:"audio",url:"https://ice5.somafm.com/vaporwaves-128-mp3",fallback:"https://ice6.somafm.com/vaporwaves-128-mp3",era:"VAPORWAVE · SOMAFM · AO VIVO"},
     nineties:{label:"Rádio Energia Dance · anos 90",type:"audio",url:"https://s05.w3bserver.com:20025/;",era:"EURODANCE · DANCE · ANOS 90"},
     "two-thousands":{label:"Rádio Studio Flashback · anos 2000",type:"audio",url:"https://stream-163.zeno.fm/6gv76f1xruquv",era:"HITS · POP · ROCK · ANOS 2000"},
-    games:{label:"SomaFM cliqhop · eletrônica",type:"audio",url:"https://ice5.somafm.com/cliqhop-128-mp3",era:"IDM · ELETRÔNICA EXPERIMENTAL"},
+    games:{label:"SomaFM cliqhop · eletrônica",type:"audio",url:"https://ice5.somafm.com/cliqhop-128-mp3",fallback:"https://ice6.somafm.com/cliqhop-128-mp3",era:"IDM · ELETRÔNICA EXPERIMENTAL"},
     br:{label:"Fita Cassete · flashback",type:"audio",url:"https://server01.ouvir.radio.br:8018/stream",era:"FLASHBACK · CLÁSSICOS DE VÁRIAS DÉCADAS"}
   };
-  let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0;
+  let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0,radioWantsPlayback=false;
   const radioAudio=$("#radio-audio"),radioEmbed=$("#radio-embed"),radioNote=$("#radio-player-note");
   function setRadioInfo(){
     const station=radioStations[radioGenre];
@@ -390,7 +390,7 @@
     $("#radio-status").textContent=(playing?"ON AIR · ":"READY · ")+radioStations[radioGenre].label.toUpperCase();
   }
   function tuneRadio(autoplay=false){
-    const station=radioStations[radioGenre];radioAudio.pause();radioAudio.removeAttribute("src");radioAudio.load();
+    const station=radioStations[radioGenre];radioWantsPlayback=autoplay;radioAudio.dataset.fallbackUsed="no";radioAudio.pause();radioAudio.removeAttribute("src");radioAudio.load();
     radioEmbed.hidden=true;radioEmbed.src="about:blank";radioAudio.hidden=station.type!=="audio";radioNote.hidden=false;
     setRadioInfo();
     if(station.type==="audio"){
@@ -406,16 +406,16 @@
   $("#radio-play").addEventListener("click",()=>{
     const station=radioStations[radioGenre];
     if(station.type==="embed"){radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;toast("Use PLAY dentro do player da rádio incorporada.");return}
-    if(radioPlaying){radioAudio.pause();radioElapsed+=Date.now()-radioStartedAt;setRadioPlaying(false)}
-    else radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>toast("A transmissão não iniciou. Tente novamente."));
+    if(radioPlaying){radioWantsPlayback=false;radioAudio.pause();radioElapsed+=Date.now()-radioStartedAt;setRadioPlaying(false)}
+    else {radioWantsPlayback=true;radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>toast("A transmissão não iniciou. Tente novamente."));}
   });
-  $("#radio-stop").addEventListener("click",()=>{radioAudio.pause();radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";setRadioPlaying(false);radioNote.hidden=false;radioNote.innerHTML="♫ TRANSMISSÃO PAUSADA<br><small>Escolha uma estação e aperte PLAY.</small>"});
+  $("#radio-stop").addEventListener("click",()=>{radioWantsPlayback=false;radioAudio.pause();radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";setRadioPlaying(false);radioNote.hidden=false;radioNote.innerHTML="♫ TRANSMISSÃO PAUSADA<br><small>Escolha uma estação e aperte PLAY.</small>"});
   $("#radio-next").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+1)%s.options.length;s.dispatchEvent(new Event("change"))});
   $("#radio-prev").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+s.options.length-1)%s.options.length;s.dispatchEvent(new Event("change"))});
   $("#radio-volume").addEventListener("input",e=>{const v=Number(e.target.value);$("#radio-volume-value").textContent=v+"%";radioAudio.volume=v/100});
   radioAudio.addEventListener("playing",()=>setRadioPlaying(true));
   radioAudio.addEventListener("pause",()=>{if(radioPlaying)setRadioPlaying(false)});
-  radioAudio.addEventListener("error",()=>{if(!radioAudio.hidden)toast("A transmissão não respondeu. Tente outra estação.")});
+  radioAudio.addEventListener("error",()=>{if(radioAudio.hidden)return;const station=radioStations[radioGenre];if(station.fallback&&radioAudio.dataset.fallbackUsed!=="yes"){radioAudio.dataset.fallbackUsed="yes";radioAudio.src=station.fallback;radioAudio.load();if(radioWantsPlayback)radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>toast("A estação não iniciou. Tente outra estação."));return;}toast("A transmissão não respondeu. Tente outra estação.");});
   $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
   tuneRadio(true);
