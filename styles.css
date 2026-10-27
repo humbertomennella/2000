@@ -380,3 +380,8 @@ body{padding-bottom:42px}
 .profile-friends{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
 @media(max-width:720px){.desktop-icons{top:5px;left:5px;gap:5px}.desktop-icons span{font-size:21px}.desktop-taskbar{height:36px;padding:3px;gap:3px}.start-button{height:28px;padding:2px 6px;font-size:10px}.taskbar-app{max-width:115px;min-width:48px;padding:3px 5px;font-size:10px}.taskbar-tray{gap:4px;padding:0 5px;font-size:10px}.start-menu{bottom:37px}.global-sound-control{flex-basis:100%;min-width:100%}.browser-tools{flex-wrap:wrap}.browser-tools input{flex:1 1 120px}.browser-tools button{min-height:28px}.browser-bookmarks,.museum-exhibits{grid-template-columns:minmax(0,1fr)}.museum-exhibit{padding:8px}.site-shell{margin-bottom:8px}}
 @media(max-width:420px){.taskbar-tray>span{display:none}.taskbar-app{max-width:82px}.browser-bookmarks{padding:5px}.ascii-logo{font-size:clamp(4px,1.45vw,10px);overflow:hidden}.masthead-top{flex-wrap:wrap;gap:4px}}
+
+.geek-source-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px;padding:8px;background:#d9e8ff;border:2px ridge #fff}
+.geek-source-strip>b{grid-column:1/-1;font:bold 10px Tahoma;color:#000080}
+.geek-source-strip a{min-width:0;padding:6px;background:#ffffee;border:1px outset #fff;font:10px/1.4 Tahoma;overflow-wrap:anywhere}
+@media(max-width:720px){.geek-source-strip{grid-template-columns:minmax(0,1fr)}}
