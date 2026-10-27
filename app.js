@@ -130,7 +130,25 @@
     });
   }
   renderTimeline();
-  $$("[data-decade]").forEach(button => button.addEventListener("click", () => {
+  const museumExhibits=[
+    {year:1996,era:"90",title:"Homepage pessoal",text:"Páginas feitas à mão, GIFs, contadores de visitas, listas de links e mensagens de boas-vindas.",source:"https://www.webdesignmuseum.org/exhibitions/web-design-in-the-90s",label:"Ver sites preservados"},
+    {year:1998,era:"90",title:"Diretórios e buscadores",text:"Encontrar um site também era navegar por categorias, diretórios e recomendações de outras páginas.",source:"https://web.archive.org/",label:"Explorar capturas históricas"},
+    {year:2001,era:"00",title:"Mensageiros instantâneos",text:"Listas de contatos, status personalizados, emoticons e notificações sonoras transformaram a conversa online.",source:"https://www.webdesignmuseum.org/",label:"Visitar o museu de design"},
+    {year:2004,era:"00",title:"Perfis e comunidades",text:"Redes sociais, comunidades e páginas personalizáveis fizeram da identidade online um espaço de expressão.",source:"https://theoldwebproject.org/timeline",label:"Explorar a web pessoal"}
+  ];
+  function renderMuseum(){
+    const container=$("#museum-exhibits"),filter=$("#museum-filter").value;container.replaceChildren();
+    museumExhibits.filter(item=>filter==="all"||item.era===filter).forEach(item=>{
+      const article=document.createElement("article");article.className="museum-exhibit";
+      const year=document.createElement("span");year.className="museum-year";year.textContent=item.year;
+      const title=document.createElement("h3");title.textContent=item.title;
+      const description=document.createElement("p");description.textContent=item.text;
+      const link=document.createElement("a");link.href=item.source;link.target="_blank";link.rel="noopener noreferrer";link.textContent=item.label+" ↗";
+      article.append(year,title,description,link);container.append(article);
+    });
+  }
+  $("#museum-filter").addEventListener("change",renderMuseum);renderMuseum();
+  $("[data-decade]").forEach(button => button.addEventListener("click", () => {
     $$("[data-decade]").forEach(b => b.classList.toggle("active", b === button));
     renderTimeline(button.dataset.decade);
   }));
@@ -141,13 +159,20 @@
   });
   // Efeitos curtos de interface. A música da rádio vem de transmissões reais.
   let audioContext = null, masterGain = null, soundEnabled = true;
+  let soundLevel = Number(storage.get("webzone-sound-level", 0.6));
+  if (!Number.isFinite(soundLevel)) soundLevel = 0.6;
+  soundLevel = Math.max(0, Math.min(1, soundLevel));
+  const soundVolumeInput = $("#global-sound-volume"), soundVolumeValue = $("#global-sound-value");
+  if (soundVolumeInput) soundVolumeInput.value = String(Math.round(soundLevel * 100));
+  if (soundVolumeValue) soundVolumeValue.textContent = Math.round(soundLevel * 100) + "%";
+  function applySoundLevel() { if (masterGain) masterGain.gain.value = soundLevel; if (dialupAudio) dialupAudio.volume = soundLevel * 0.72; }
   function initAudio(){
     if(audioContext) return;
     const Ctx=window.AudioContext||window.webkitAudioContext;
     if(!Ctx) return;
     audioContext=new Ctx();
     masterGain=audioContext.createGain();
-    masterGain.gain.value=.18;
+    masterGain.gain.value=soundLevel;
     masterGain.connect(audioContext.destination);
   }
   function note(freq,duration,when,opts={}){
@@ -168,11 +193,11 @@
   }
   let dialupAudio = null;
   function dialupSound(){
-    if(!soundEnabled)return;
+    if(!soundEnabled || soundLevel === 0)return;
     try{
       if(!dialupAudio){
         dialupAudio=new Audio("https://commons.wikimedia.org/wiki/Special:FilePath/Dial_up_modem_noises.ogg");
-        dialupAudio.preload="auto";dialupAudio.volume=.72;
+        dialupAudio.preload="auto";dialupAudio.volume=soundLevel*.72;
       }
       dialupAudio.pause();dialupAudio.currentTime=0;
       const playback=dialupAudio.play();
@@ -205,21 +230,56 @@
     $("#profile-preview").textContent = name + " está " + mood;
     storage.set(profileKey, {name, mood});
   }
-  $("#save-profile").addEventListener("click", () => { updateProfile(); toast("Status do Messenger atualizado."); });
+  $("#save-profile").addEventListener("click",()=>{
+    updateProfile();const data=storage.get(profileWindowKey,{});
+    data.name=$("#nickname").value.trim().slice(0,24)||"visitante_2000";data.status=$("#profile-status").value;storage.set(profileWindowKey,data);
+    if($("#profile-edit-name"))$("#profile-edit-name").value=data.name;if($("#profile-edit-status"))$("#profile-edit-status").value=data.status;if($("#profile-window-name"))$("#profile-window-name").textContent=data.name;
+    toast("Status do Messenger atualizado.");
+  });
   $("#nickname").addEventListener("keydown", e => { if (e.key === "Enter") updateProfile(); });
   updateProfile();
 
-  const windows = $$(".floating-window");
+  const windows = $(".floating-window");
+  const taskbarApps = $("#taskbar-apps"), startMenu = $("#start-menu"), startButton = $("#start-button");
+  const windowIcons = {"browser-window":"🌐","chat-room-window":"💬","messenger-window":"🟢","icq-window":"🌼","profile-window":"👤","secret-window":"🔒"};
+  function renderTaskbar() {
+    if (!taskbarApps) return;
+    taskbarApps.replaceChildren();
+    windows.forEach(win => {
+      if (win.classList.contains("hidden")) return;
+      const button=document.createElement("button");button.type="button";
+      button.className="taskbar-app"+(win.classList.contains("minimized")?"":" is-active");
+      const title=$(".floating-title span",win)?.textContent?.trim()||win.getAttribute("aria-label")||win.id;
+      button.textContent=(windowIcons[win.id]||"▣")+" "+title;button.title=title;
+      button.addEventListener("click",()=>{
+        if(win.classList.contains("minimized")||win.classList.contains("hidden"))openWindow(win.id);
+        else win.style.zIndex=String(Date.now()%100000+30);
+        renderTaskbar();
+      });
+      taskbarApps.append(button);
+    });
+  }
   function openWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
     windows.forEach(w => { if (w !== win) w.style.zIndex = "20"; });
     win.classList.remove("hidden","minimized"); win.style.zIndex = String(Date.now() % 100000 + 30);
     const input = $("input", win); if (input) setTimeout(() => input.focus(), 50);
+    if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");renderTaskbar();
   }
-  function closeWindow(id) { const win = document.getElementById(id); if (win) win.classList.add("hidden"); }
-  $$("[data-open]").forEach(button => button.addEventListener("click", () => openWindow(button.dataset.open)));
-  $$("[data-close]").forEach(button => button.addEventListener("click", () => closeWindow(button.dataset.close)));
+  function closeWindow(id){const win=document.getElementById(id);if(win)win.classList.add("hidden");renderTaskbar();}
+  $("[data-open]").forEach(button=>button.addEventListener("click",()=>openWindow(button.dataset.open)));
+  $("[data-close]").forEach(button=>button.addEventListener("click",()=>closeWindow(button.dataset.close)));
+  if(startButton&&startMenu)startButton.addEventListener("click",()=>{
+    const opening=startMenu.classList.contains("hidden");startMenu.classList.toggle("hidden",!opening);startButton.setAttribute("aria-expanded",String(opening));
+  });
+  document.addEventListener("click",e=>{
+    if(!startMenu||!startButton||startMenu.classList.contains("hidden"))return;
+    if(!startMenu.contains(e.target)&&e.target!==startButton){startMenu.classList.add("hidden");startButton.setAttribute("aria-expanded","false");}
+  });
+  $("[data-start-radio]").forEach(link=>link.addEventListener("click",()=>{
+    $("#radio").scrollIntoView({behavior:"smooth",block:"start"});if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");
+  }));
   $$(".floating-title").forEach(bar => {
     let drag = null;
     bar.addEventListener("pointerdown", e => {
@@ -232,14 +292,24 @@
     bar.addEventListener("pointermove", e => {
       if (!drag) return;
       const win = bar.closest(".floating-window");
-      const x = Math.max(0, Math.min(window.innerWidth - 100, drag.left + e.clientX - drag.x));
+      const width = Math.min(win.offsetWidth || 430, window.innerWidth);
+      const visibleTitle = Math.min(100, width);
+      const x = Math.max(0, Math.min(window.innerWidth - visibleTitle, drag.left + e.clientX - drag.x));
       const y = Math.max(0, Math.min(window.innerHeight - 60, drag.top + e.clientY - drag.y));
       win.style.left = x + "px"; win.style.top = y + "px";
     });
     const stop = () => { drag = null; };
     bar.addEventListener("pointerup", stop); bar.addEventListener("pointercancel", stop);
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") windows.forEach(w => w.classList.add("hidden")); });
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){windows.forEach(w=>w.classList.add("hidden"));if(startMenu)startMenu.classList.add("hidden");if(startButton)startButton.setAttribute("aria-expanded","false");renderTaskbar();}
+  });
+  const taskbarObserver=new MutationObserver(renderTaskbar);
+  windows.forEach(win=>taskbarObserver.observe(win,{attributes:true,attributeFilter:["class"]}));
+  renderTaskbar();
+  const taskbarClock=$("#taskbar-clock");
+  function updateTaskbarClock(){if(taskbarClock)taskbarClock.textContent=new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(new Date());}
+  updateTaskbarClock();setInterval(updateTaskbarClock,30000);
 
   const memoryMessages = {
     cd:"Você gravou um CD em velocidade 48x, escreveu o nome com caneta e torceu para o aparelho conseguir ler.",
@@ -289,15 +359,35 @@
     chat: {address:"http://msn-messenger.net/",html:"<h2>MSN Messenger 7.5</h2><p>Você tem 4 contatos online e 1 pessoa acabou de entrar.</p><button data-page='home'>Voltar para a página inicial</button><div class='fake-page-content'>♫ agora ouvindo: música.mp3<br>Seu status: disponível</div>"},
     history: {address:"http://arquivo-historico.org/",html:"<h2>Arquivo histórico 1990–2009</h2><p>Explore os acontecimentos que mudaram a cultura, a tecnologia e o mundo.</p><button data-page='home'>Página inicial</button><div class='fake-page-content'>1991 · Web pública<br>1995 · Windows 95<br>2004 · Redes sociais<br>2007 · Smartphone moderno</div>"}
   };
-  let browserHistory = ["home"], browserIndex = 0;
-  function showBrowserPage(key, push = true) {
-    const page = browserPages[key] || browserPages.home;
-    if (push) { browserHistory = browserHistory.slice(0, browserIndex + 1); browserHistory.push(key); browserIndex = browserHistory.length - 1; }
-    $("#browser-address").value = page.address;
-    $("#browser-page").innerHTML = page.html;
-    $$("[data-page]", $("#browser-page")).forEach(button => button.addEventListener("click", () => showBrowserPage(button.dataset.page)));
+  const savedBrowserHistory=storage.get("webzone-browser-history",["home"]);
+  let browserHistory=Array.isArray(savedBrowserHistory)?savedBrowserHistory.filter(key=>browserPages[key]):["home"];
+  if(!browserHistory.length)browserHistory=["home"];
+  let browserIndex=browserHistory.length-1;
+  let browserFavorites=storage.get("webzone-browser-favorites",[]);
+  if(!Array.isArray(browserFavorites))browserFavorites=[];
+  function renderBrowserLists(){
+    const favoritesList=$("#browser-favorites-list"),historyList=$("#browser-history-list");
+    if(!favoritesList||!historyList)return;
+    favoritesList.replaceChildren();historyList.replaceChildren();
+    const addLink=(container,key,label)=>{const page=browserPages[key];if(!page)return;const button=document.createElement("button");button.type="button";button.dataset.browserKey=key;button.textContent=label||page.address;container.append(button);};
+    browserFavorites.forEach(key=>addLink(favoritesList,key,"★ "+browserPages[key].address));
+    [...browserHistory].reverse().slice(0,10).forEach(key=>addLink(historyList,key,"🕒 "+browserPages[key].address));
+    if(!favoritesList.children.length)favoritesList.textContent="Nenhum favorito salvo.";
+    if(!historyList.children.length)historyList.textContent="O histórico está vazio.";
   }
-  $$("[data-page]", $("#browser-page")).forEach(button => button.addEventListener("click", () => showBrowserPage(button.dataset.page)));
+  function showBrowserPage(key,push=true){
+    const page=browserPages[key]||browserPages.home;
+    if(push){browserHistory=browserHistory.slice(0,browserIndex+1);browserHistory.push(key);if(browserHistory.length>40)browserHistory=browserHistory.slice(-40);browserIndex=browserHistory.length-1;storage.set("webzone-browser-history",browserHistory);}
+    $("#browser-address").value=page.address;$("#browser-page").innerHTML=page.html;renderBrowserLists();
+  }
+  $("#browser-page").addEventListener("click",e=>{const button=e.target.closest("[data-page]");if(button)showBrowserPage(button.dataset.page);});
+  $("#browser-bookmarks-toggle").addEventListener("click",()=>{const panel=$("#browser-bookmarks");panel.hidden=!panel.hidden;$("#browser-bookmarks-toggle").setAttribute("aria-expanded",String(!panel.hidden));});
+  $("#browser-favorite").addEventListener("click",()=>{
+    const key=browserHistory[browserIndex]||"home";if(browserFavorites.includes(key)){toast("Esta página já está nos favoritos.");return;}
+    browserFavorites=[...browserFavorites,key].slice(-20);storage.set("webzone-browser-favorites",browserFavorites);renderBrowserLists();toast("Página adicionada aos favoritos.");
+  });
+  $("#browser-bookmarks").addEventListener("click",e=>{const button=e.target.closest("[data-browser-key]");if(button)showBrowserPage(button.dataset.browserKey);});
+  renderBrowserLists();showBrowserPage(browserHistory[browserIndex],false);
   $("#browser-go").addEventListener("click", () => {
     const value = $("#browser-address").value.toLowerCase();
     const key = value.includes("msn") ? "chat" : value.includes("historico") ? "history" : "home";
@@ -323,11 +413,24 @@
     const own = document.createElement("p"); const b = document.createElement("b"); b.textContent = "Você: "; own.append(b, document.createTextNode(message)); chatLog.append(own); input.value = ""; chatLog.scrollTop = chatLog.scrollHeight;
   });
 
-  $("#change-avatar").addEventListener("click", () => {
-    const avatars = ["😎","🦇","🐸","👽","🧙","🐱","💿","🤘"];
-    const current = $(".avatar").textContent;
-    const next = avatars[(avatars.indexOf(current) + 1) % avatars.length];
-    $(".avatar").textContent = next; toast("Avatar atualizado. Perfil digno de 2004.");
+  const profileWindowKey="webzone-personal-profile";
+  function applyProfileWindowData(data){
+    const values={name:data.name||"visitante_2000",status:data.status||"online e feliz",music:data.music||"qualquer MP3 de 4 MB",quote:data.quote||"a vida é feita de pixels",avatar:data.avatar||"😎"};
+    $("#profile-edit-name").value=values.name;$("#profile-edit-status").value=values.status;$("#profile-music-input").value=values.music;$("#profile-quote").value=values.quote;
+    $("#profile-window-name").textContent=values.name;$("#profile-music").textContent=values.music;$("#profile-quote-preview").textContent="Frase: “"+values.quote+"”";$(".avatar").textContent=values.avatar;storage.set(profileWindowKey,values);
+  }
+  applyProfileWindowData(storage.get(profileWindowKey,{}));
+  $("#profile-edit-form").addEventListener("submit",e=>{
+    e.preventDefault();
+    const data={...storage.get(profileWindowKey,{}),name:$("#profile-edit-name").value.trim().slice(0,24)||"visitante_2000",status:$("#profile-edit-status").value,music:$("#profile-music-input").value.trim().slice(0,80)||"nenhuma música selecionada",quote:$("#profile-quote").value.trim().slice(0,120)||"a vida é feita de pixels",avatar:$(".avatar").textContent};
+    applyProfileWindowData(data);toast("Perfil salvo neste navegador.");
+  });
+  $(".profile-friends [data-profile-friend]").forEach(button=>button.addEventListener("click",()=>{
+    openWindow("messenger-window");const target=$("#messenger-window [data-contact]").find(item=>item.dataset.contact===button.dataset.profileFriend);if(target)target.click();
+  }));
+  $("#change-avatar").addEventListener("click",()=>{
+    const avatars=["😎","🦇","🐸","👽","🧙","🐱","💿","🤘"],current=$(".avatar").textContent,next=avatars[(avatars.indexOf(current)+1)%avatars.length];
+    $(".avatar").textContent=next;const data=storage.get(profileWindowKey,{});data.avatar=next;storage.set(profileWindowKey,data);toast("Avatar atualizado. Perfil digno de 2004.");
   });
 
   const guestKey = "webzone_guests";
@@ -419,6 +522,11 @@
   radioAudio.addEventListener("error",()=>{if(radioAudio.hidden)return;const station=radioStations[radioGenre];if(station.fallback&&radioAudio.dataset.fallbackUsed!=="yes"){radioAudio.dataset.fallbackUsed="yes";radioAudio.src=station.fallback;radioAudio.load();if(radioWantsPlayback)radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>{setRadioPlaying(false);toast("A estação não iniciou. Troque de estação para continuar.");});return;}setRadioPlaying(false);toast("A transmissão não respondeu. Troque de estação para continuar.");});
   $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
   $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
+  if (soundVolumeInput) soundVolumeInput.addEventListener("input", e => {
+    soundLevel = Math.max(0, Math.min(1, Number(e.target.value) / 100));
+    if (soundVolumeValue) soundVolumeValue.textContent = Math.round(soundLevel * 100) + "%";
+    storage.set("webzone-sound-level", soundLevel); applySoundLevel();
+  });
   tuneRadio(true);
   // Se o navegador bloquear autoplay com som, tente novamente no primeiro gesto fora do player.
   document.addEventListener("pointerdown",e=>{
@@ -489,7 +597,7 @@
     }
   });
   msnChatObserver.observe($("#chat-log"),{childList:true});
-  $$(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");});});
+  $(".floating-title").forEach(bar=>{const win=bar.closest(".floating-window");if(!win)return;const button=bar.querySelector("[data-minimize]");if(button)button.addEventListener("click",e=>{e.stopPropagation();win.classList.toggle("minimized");renderTaskbar();});});
 
   // Popup nostálgico: uma vez por sessão, sem interromper a navegação repetidamente.
   const welcomePopup = $("#welcome-popup");
