@@ -326,140 +326,68 @@
 
 
 
-  // Rádio local contínua: Web Audio, sem depender de vídeos externos.
-  const radioGenres = {
-    vapor:{label:"VAPORWAVE FM · 1987 AFTER HOURS",tempo:76,scale:[0,3,5,7,10],wave:"triangle",filter:1050,delay:.34},
-    nineties:{label:"90s ALT / DANCE · NIGHT DRIVE",tempo:112,scale:[0,2,4,7,9],wave:"sawtooth",filter:1800,delay:.16},
-    "two-thousands":{label:"2000s POP / EMO / ROCK",tempo:124,scale:[0,3,5,7,10],wave:"square",filter:2200,delay:.12},
-    games:{label:"8-BIT / PS1 / N64 / PC",tempo:138,scale:[0,2,5,7,9],wave:"square",filter:2600,delay:.08},
-    br:{label:"BRASIL · MTV / LAN HOUSE / MP3",tempo:108,scale:[0,2,4,7,9],wave:"triangle",filter:1500,delay:.2}
+  // Rádio real: streams ao vivo dentro da página, sem sintetizador e sem links para busca.
+  const radioStations = {
+    vapor:{label:"SomaFM Vaporwaves · vaporwave real",type:"audio",url:"https://ice5.somafm.com/vaporwaves-128-mp3",era:"VAPORWAVE · SOMAFM · AO VIVO"},
+    nineties:{label:"Brasil Hits Flashback · anos 90/2000",type:"embed",url:"https://www.brasilhits.com/flashback",era:"HITS DOS ANOS 90 E 2000"},
+    "two-thousands":{label:"Brasil Hits Flashback · pop dos anos 2000",type:"embed",url:"https://www.brasilhits.com/flashback",era:"POP · DANCE · ROCK · 2000s"},
+    games:{label:"SomaFM cliqhop · eletrônica",type:"audio",url:"https://ice5.somafm.com/cliqhop-128-mp3",era:"IDM · ELETRÔNICA EXPERIMENTAL"},
+    br:{label:"Brasil Hits Rock · clássicos",type:"embed",url:"https://www.brasilhits.com/rock",era:"ROCK CLÁSSICO · GRUNGE · ANOS 2000"}
   };
-  let audioContext=null, masterGain=null, radioPlaying=false, soundEnabled=true, radioTimer=null, radioStep=0, radioStart=0, radioElapsed=0, radioGenre="vapor";
-    const classicSearches = [
-    ["Everybody (Backstreet's Back)","Backstreet Boys"],["...Baby One More Time","Britney Spears"],["Blue (Da Ba Dee)","Eiffel 65"],["In the End","Linkin Park"],["Complicated","Avril Lavigne"],["Clint Eastwood","Gorillaz"],["Anna Júlia","Los Hermanos"],["Dias Atrás","CPM 22"],["Around the World","Daft Punk"],["Resonance","HOME vaporwave"]
-  ];
-  function initAudio(){
-    if(audioContext) return;
-    const Ctx=window.AudioContext||window.webkitAudioContext;
-    if(!Ctx){toast("Este navegador não oferece Web Audio.");return;}
-    audioContext=new Ctx(); masterGain=audioContext.createGain(); masterGain.gain.value=Number($("#radio-volume").value)/100*.24; masterGain.connect(audioContext.destination);
+  let radioGenre=$("#radio-station").value||"vapor",radioPlaying=false,radioStartedAt=0,radioElapsed=0;
+  const radioAudio=$("#radio-audio"),radioEmbed=$("#radio-embed"),radioNote=$("#radio-player-note");
+  function setRadioInfo(){
+    const station=radioStations[radioGenre];
+    $("#radio-track-title").textContent=station.label;
+    $("#radio-track-era").textContent=station.era;
+    $("#radio-status").textContent="READY · "+station.label.toUpperCase();
   }
-  function note(freq,duration,when,opts={}){
-    if(!audioContext||!masterGain) return;
-    const osc=audioContext.createOscillator(), gain=audioContext.createGain(), filter=audioContext.createBiquadFilter();
-    osc.type=opts.wave||"triangle"; osc.frequency.setValueAtTime(freq,when);
-    filter.type="lowpass"; filter.frequency.setValueAtTime(opts.filter||1300,when);
-    gain.gain.setValueAtTime(.0001,when); gain.gain.exponentialRampToValueAtTime(opts.volume||.075,when+.025); gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
-    osc.connect(filter); filter.connect(gain); gain.connect(masterGain); osc.start(when); osc.stop(when+duration+.04);
+  function setRadioPlaying(playing){
+    radioPlaying=playing;$("#radio-live-state").textContent=playing?"LIVE":"STOP";
+    $("#radio-play").textContent=playing?"Ⅱ":"▶";$(".winamp-shell").classList.toggle("is-playing",playing);
+    $("#radio-status").textContent=(playing?"ON AIR · ":"READY · ")+radioStations[radioGenre].label.toUpperCase();
   }
-  function blip(freq=880,duration=.09,volume=.08){
-    initAudio(); if(!audioContext||!soundEnabled) return; audioContext.resume();
-    const now=audioContext.currentTime; note(freq,duration,now,{wave:"sine",volume,filter:3500});
-  }
-  function noiseBurst(duration=.24,volume=.05,when=null){
-    if(!audioContext||!masterGain) return;
-    const length=Math.max(1,Math.floor(audioContext.sampleRate*duration)), buffer=audioContext.createBuffer(1,length,audioContext.sampleRate), data=buffer.getChannelData(0);
-    for(let i=0;i<length;i++) data[i]=(Math.random()*2-1)*(1-i/length);
-    const src=audioContext.createBufferSource(), gain=audioContext.createGain(), filter=audioContext.createBiquadFilter(), startAt=when??audioContext.currentTime;
-    src.buffer=buffer; filter.type="bandpass"; filter.frequency.value=1500; filter.Q.value=.7; gain.gain.value=volume;
-    src.connect(filter);filter.connect(gain);gain.connect(masterGain);src.start(startAt);
-  }
-  function dialupSound(){
-    initAudio(); if(!audioContext||!soundEnabled) return; audioContext.resume();
-    const start=audioContext.currentTime;
-    note(425,.35,start,{wave:"sine",volume:.12,filter:1800});
-    [697,770,697,770,697,770].forEach((f,i)=>note(f,.075,start+.45+i*.105,{wave:"sine",volume:.055,filter:2200}));
-    note(425,.5,start+1.25,{wave:"sine",volume:.1,filter:1800});
-    for(let i=0;i<13;i++){
-      const t=start+1.9+i*.16;
-      note(430+Math.random()*1700,.14,t,{wave:i%3===0?"sawtooth":"sine",volume:.035+Math.random()*.025,filter:1200+Math.random()*2200});
-      if(i%2===0) note(900+Math.random()*1300,.1,t+.05,{wave:"triangle",volume:.025,filter:2500});
-      noiseBurst(.1,.018,t);
+  function tuneRadio(autoplay=false){
+    const station=radioStations[radioGenre];radioAudio.pause();radioAudio.removeAttribute("src");radioAudio.load();
+    radioEmbed.hidden=true;radioEmbed.src="about:blank";radioAudio.hidden=station.type!=="audio";radioNote.hidden=false;
+    setRadioInfo();
+    if(station.type==="audio"){
+      radioAudio.src=station.url;radioAudio.volume=Number($("#radio-volume").value)/100;radioAudio.load();
+      radioNote.innerHTML="♫ TRANSMISSÃO AO VIVO<br><small>Faixas reais em sequência automática. Sem chiptune inventado.</small>";
+      if(autoplay)radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>toast("Clique em PLAY para liberar o áudio."));
+      else setRadioPlaying(false);
+    }else{
+      radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;setRadioPlaying(false);
     }
-    note(880,.12,start+4.1,{wave:"sine",volume:.06,filter:3000});
   }
-  function radioStepFn(){
-    if(!radioPlaying||!audioContext) return;
-    const g=radioGenres[radioGenre], now=audioContext.currentTime, beat=60/g.tempo;
-    const root=radioGenre==="vapor"?110:radioGenre==="games"?164.81:130.81;
-    const scale=g.scale;
-    const step=radioStep++;
-    const chordRoot=root*(step%16<8?1:Math.pow(2,2/12));
-    if(step%4===0){
-      note(chordRoot,beat*3.5,now,{wave:"sine",volume:.035,filter:g.filter});
-      note(chordRoot*1.5,beat*3.1,now,{wave:g.wave,volume:.019,filter:g.filter});
-    }
-    const degree=scale[(step*3+Math.floor(step/7))%scale.length], octave=(step%8===6?2:1);
-    note(root*Math.pow(2,degree/12)*octave,beat*.72,now,{wave:g.wave,volume:radioGenre==="vapor"?.035:.025,filter:g.filter});
-    if(step%2===0) note(root*.5,beat*.6,now,{wave:"sine",volume:.06,filter:500});
-    if(step%4===2){noiseBurst(.07,.012,now);note(root*4,.035,now,{wave:"square",volume:.012,filter:4000});}
-    if(radioGenre==="vapor"&&step%8===0){
-      note(root*2,beat*7,now,{wave:"sine",volume:.014,filter:700});
-      note(root*2.01,beat*7,now,{wave:"triangle",volume:.012,filter:850});
-    }
-    const bars=$$("#radio-spectrum i");
-    bars.forEach((bar,i)=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"));
-    $("#radio-live-state").textContent="PLAY";
-    $("#radio-status").textContent="PLAYING · "+g.label;
-    $("#radio-track-title").textContent=g.label;
-    $("#radio-track-era").textContent="GENERATIVE MIX · SEM FIM · FAIXA "+String(Math.floor(step/32)+1).padStart(2,"0");
-    radioTimer=setTimeout(radioStepFn,beat*1000);
-  }
-  function startRadio(){
-    initAudio(); if(!audioContext)return; audioContext.resume();
-    radioPlaying=true;radioStart=Date.now()-radioElapsed;$("#radio-play").textContent="Ⅱ";$(".winamp-shell").classList.add("is-playing");
-    if(radioTimer)clearTimeout(radioTimer);radioStepFn();blip(660,.1,.045);
-  }
-  function pauseRadio(){
-    radioPlaying=false;if(radioTimer)clearTimeout(radioTimer);radioElapsed=Date.now()-radioStart;
-    $("#radio-live-state").textContent="PAUSE";$("#radio-play").textContent="▶";$("#radio-status").textContent="PAUSED · RETRO MIX";$(".winamp-shell").classList.remove("is-playing");
-  }
-  function stopRadio(){
-    pauseRadio();radioElapsed=0;radioStep=0;$("#radio-live-state").textContent="STOP";$("#radio-track-title").textContent="WEB ZONE RADIO";$("#radio-track-era").textContent="Escolha sua estação e aperte PLAY";$("#radio-status").textContent="STOPPED · 56K FRIENDLY";$(".winamp-shell").classList.remove("is-playing");blip(260,.11,.04);
-  }
-  function renderRadioPlaylist(){
-    const list=$("#radio-playlist");list.replaceChildren();
-    const tracks={
-      vapor:[["Mallsoft / shopping mall","Vaporwave"],["Late night Windows 98","Vaporwave"],["Aqua blue dream","Synthwave"]],
-      nineties:[["Nirvana · Smells Like Teen Spirit","1991"],["The Prodigy · Firestarter","1996"],["Eiffel 65 · Blue","1998"]],
-      "two-thousands":[["Linkin Park · In the End","2000"],["Avril Lavigne · Complicated","2002"],["Gorillaz · Feel Good Inc.","2005"]],
-      games:[["Super Mario 64","Nintendo 64"],["The Sims Build Mode","PC"],["Need for Speed: Underground","PS2 / PC"]],
-      br:[["Los Hermanos · Anna Júlia","1999"],["CPM 22 · Dias Atrás","2000"],["Charlie Brown Jr. · Só por uma Noite","2001"]]
-    }[radioGenre]||[];
-    tracks.forEach(([title,meta])=>{
-      const a=document.createElement("a");a.className="radio-track";a.href="https://www.youtube.com/results?search_query="+encodeURIComponent(title+" "+meta+" official audio");a.target="_blank";a.rel="noopener noreferrer";
-      const strong=document.createElement("strong");strong.textContent=title;const span=document.createElement("span");span.textContent=meta+" · buscar faixa original ↗";a.append(strong,span);list.append(a);
-    });
-  }
-  $("#radio-station").addEventListener("change",()=>{
-    radioGenre=$("#radio-station").value;radioStep=0;
-    const g=radioGenres[radioGenre];$("#radio-track-title").textContent=g.label;$("#radio-track-era").textContent="STATION READY · ORIGINAL CONTINUOUS MIX";
-    $("#radio-status").textContent="TUNED · "+g.label;renderRadioPlaylist();blip(740,.08,.035);
-    if(radioPlaying){pauseRadio();startRadio();}
+  $("#radio-station").addEventListener("change",()=>{radioGenre=$("#radio-station").value;radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";tuneRadio(false);blip(740,.08,.035)});
+  $("#radio-play").addEventListener("click",()=>{
+    const station=radioStations[radioGenre];
+    if(station.type==="embed"){radioEmbed.hidden=false;radioEmbed.src=station.url;radioNote.hidden=true;toast("Use PLAY dentro do player da rádio incorporada.");return}
+    if(radioPlaying){radioAudio.pause();radioElapsed+=Date.now()-radioStartedAt;setRadioPlaying(false)}
+    else radioAudio.play().then(()=>{radioStartedAt=Date.now();setRadioPlaying(true)}).catch(()=>toast("A transmissão não iniciou. Tente novamente."));
   });
-  $("#radio-play").addEventListener("click",()=>radioPlaying?pauseRadio():startRadio());
-  $("#radio-skin-toggle").addEventListener("click",()=>{
-    const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");
-    $("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";
-    $("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";
-    blip(wmp?920:640,.09,.05);
-  });
-  $("#radio-stop").addEventListener("click",stopRadio);
-  $("#radio-next").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
-  $("#radio-prev").addEventListener("click",()=>{$("#radio-station").selectedIndex=($("#radio-station").selectedIndex+$("#radio-station").options.length-1)%$("#radio-station").options.length;$("#radio-station").dispatchEvent(new Event("change"));});
-  $("#radio-volume").addEventListener("input",e=>{const value=Number(e.target.value);$("#radio-volume-value").textContent=value+"%";if(masterGain)masterGain.gain.setTargetAtTime(value/100*.24,audioContext.currentTime,.04);});
-  $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04);});
-  $("#radio-classics").addEventListener("click",()=>{const query=classicSearches.map(([song,artist])=>song+" "+artist+" official audio").join(" OR ");window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query),"webzone-classics","noopener");toast("Busca de músicas clássicas aberta em outra aba.");});
-  renderRadioPlaylist();
-  setInterval(()=>{
-    if(!radioPlaying)return;
-    const seconds=Math.floor((Date.now()-radioStart)/1000);
-    $("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
-    $("#radio-progress").style.width=(seconds%60/60*100)+"%";
-  },1000);
+  $("#radio-stop").addEventListener("click",()=>{radioAudio.pause();radioElapsed=0;$("#radio-clock").textContent="00:00";$("#radio-progress").style.width="0%";setRadioPlaying(false);radioNote.hidden=false;radioNote.innerHTML="♫ TRANSMISSÃO PAUSADA<br><small>Escolha uma estação e aperte PLAY.</small>"});
+  $("#radio-next").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+1)%s.options.length;s.dispatchEvent(new Event("change"))});
+  $("#radio-prev").addEventListener("click",()=>{const s=$("#radio-station");s.selectedIndex=(s.selectedIndex+s.options.length-1)%s.options.length;s.dispatchEvent(new Event("change"))});
+  $("#radio-volume").addEventListener("input",e=>{const v=Number(e.target.value);$("#radio-volume-value").textContent=v+"%";radioAudio.volume=v/100});
+  radioAudio.addEventListener("playing",()=>setRadioPlaying(true));
+  radioAudio.addEventListener("pause",()=>{if(radioPlaying)setRadioPlaying(false)});
+  radioAudio.addEventListener("error",()=>{if(!radioAudio.hidden)toast("A transmissão não respondeu. Tente outra estação.")});
+  $("#radio-skin-toggle").addEventListener("click",()=>{const shell=$(".winamp-shell"),wmp=shell.classList.toggle("wmp-skin");$("#radio-skin-label").textContent=wmp?"▶ Windows Media Player 9 · WEB ZONE RADIO":"▣ Winamp 2.95 · WEB ZONE RADIO";$("#radio-skin-toggle").textContent=wmp?"Switch to Winamp":"Switch to WMP";blip(wmp?920:640,.09,.05)});
+  $("#radio-sound-toggle").addEventListener("click",()=>{soundEnabled=!soundEnabled;$("#radio-sound-toggle").textContent=soundEnabled?"🔊 Efeitos: ligados":"🔇 Efeitos: desligados";blip(520,.07,.04)});
+  tuneRadio(false);
+  setInterval(()=>{if(radioPlaying){const seconds=Math.floor((Date.now()-radioStartedAt+radioElapsed)/1000);$("#radio-clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");$("#radio-progress").style.width=(seconds%60/60*100)+"%";$$("#radio-spectrum i").forEach(bar=>bar.style.setProperty("--bar",(10+Math.random()*90)+"%"))}},1000);
 
-  // Som de modem no botão conectar, além dos alertas de mensageiro.
-  document.addEventListener("click",e=>{if(!e.target.closest("#connect-btn")&&e.target.closest(".retro-button,.quick-links button,.memory-card button,.culture-list button,.decade-switch button"))blip(520+Math.random()*260,.045,.025);});
+
+  // Sala #nostalgia: chat demonstrativo local e zumbido estilo MSN.
+  const roomLog=$("#room-log");
+  const roomReplies=[["pixel_girl","meu primeiro nick era cheio de x e corações 💜"],["lan_master","alguém traz o CD do Counter-Strike 1.6"],["Neo_1999","o download travou em 99% de novo..."],["Bia_xD","mandem o subnick mais dramático de vocês 😂"],["R4v3n","ICQ > qualquer mensageiro moderno 🌼"]];
+  function roomAppend(name,message,system=false){const p=document.createElement("p");if(system)p.className="room-system";const b=document.createElement("b");b.textContent=system?"*** ":name+": ";p.append(b,document.createTextNode(message));roomLog.append(p);roomLog.scrollTop=roomLog.scrollHeight}
+  $("#room-form").addEventListener("submit",e=>{e.preventDefault();const input=$("#room-input"),message=input.value.trim();if(!message)return;const nick=($("#room-nick").value.trim()||"visitante_2000").slice(0,20);roomAppend(nick,message);input.value="";blip(880,.07,.045);setTimeout(()=>{const [name,reply]=roomReplies[Math.floor(Math.random()*roomReplies.length)];roomAppend(name,reply);if(soundEnabled)blip(1040,.11,.055)},900+Math.random()*1400)});
+  $("#room-nudge").addEventListener("click",()=>{roomLog.classList.remove("room-nudge");void roomLog.offsetWidth;roomLog.classList.add("room-nudge");if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260)}roomAppend("Sistema",($("#room-nick").value.trim()||"visitante_2000")+" mandou um ZUMBIDO!",true);toast("Bzzzt! Zumbido na sala de demonstração.");setTimeout(()=>roomLog.classList.remove("room-nudge"),650)});
+  $("[data-humor]").forEach(button=>button.addEventListener("click",()=>{const mood=button.dataset.humor;$("#mood-caption").innerHTML="Humor atual: <b>"+mood+"</b>";$("[data-humor]").forEach(b=>b.classList.toggle("active",b===button));storage.set("webzone-mood",mood);blip(640,.08,.04)}));
+  const savedMood=storage.get("webzone-mood","nostálgico");$("#mood-caption").innerHTML="Humor atual: <b>"+savedMood+"</b>";$("[data-humor]").forEach(b=>b.classList.toggle("active",b.dataset.humor===savedMood));
 
   // MSN sounds, distinct ICQ client and local simulated chat.
   const msnSkinButtons=$$("[data-messenger-skin]");
