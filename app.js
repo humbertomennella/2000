@@ -452,6 +452,10 @@
     e.preventDefault();
     const name = $("#guest-name").value.trim(), url = $("#guest-url").value.trim(), message = $("#guest-message").value.trim();
     if (!name || !message) return;
+    if (window.WEBZONE_COMMUNITY?.enabled) {
+      window.WEBZONE_COMMUNITY.sendGuestbook({name:name.slice(0,30),url:url.slice(0,100),message:message.slice(0,300)});
+      return;
+    }
     const entries = storage.get(guestKey, storage.get(legacyGuestKey, []));
     entries.push({name:name.slice(0,30),url:url.slice(0,100),message:message.slice(0,300),date:new Date().toLocaleDateString("pt-BR")});
     storage.set(guestKey, entries.slice(-30)); $("#guestbook-form").reset(); renderGuestbook(); toast("Sua assinatura foi registrada neste navegador!");
@@ -573,7 +577,9 @@
   }
   $("#window-room-form").addEventListener("submit",e=>{
     e.preventDefault();const input=$("#window-room-input"),message=input.value.trim();if(!message)return;
-    appendWindowRoomMessage(($("#window-room-nick").value.trim()||"visitante").slice(0,20),message);
+    const nick=($("#window-room-nick").value.trim()||"visitante").slice(0,20);
+    if(window.WEBZONE_COMMUNITY?.enabled){window.WEBZONE_COMMUNITY.sendChat(nick,message);input.value="";blip(880,.07,.045);return;}
+    appendWindowRoomMessage(nick,message);
     input.value="";blip(880,.07,.045);
   });
   $("#window-room-nudge").addEventListener("click",()=>{
@@ -585,7 +591,7 @@
   // Sala #nostalgia: chat demonstrativo local e zumbido estilo MSN.
   const roomLog=$("#room-log");
   function roomAppend(name,message,system=false){const p=document.createElement("p");if(system)p.className="room-system";const b=document.createElement("b");b.textContent=system?"*** ":name+": ";p.append(b,document.createTextNode(message));roomLog.append(p);roomLog.scrollTop=roomLog.scrollHeight}
-  $("#room-form").addEventListener("submit",e=>{e.preventDefault();const input=$("#room-input"),message=input.value.trim();if(!message)return;const nick=($("#room-nick").value.trim()||"visitante_2000").slice(0,20);roomAppend(nick,message);input.value="";blip(880,.07,.045)});
+  $("#room-form").addEventListener("submit",e=>{e.preventDefault();const input=$("#room-input"),message=input.value.trim();if(!message)return;const nick=($("#room-nick").value.trim()||"visitante_2000").slice(0,20);if(window.WEBZONE_COMMUNITY?.enabled){window.WEBZONE_COMMUNITY.sendChat(nick,message);input.value="";blip(880,.07,.045);return;}roomAppend(nick,message);input.value="";blip(880,.07,.045)});
   $("#room-nudge").addEventListener("click",()=>{roomLog.classList.remove("room-nudge");void roomLog.offsetWidth;roomLog.classList.add("room-nudge");if(soundEnabled){blip(760,.08,.07);setTimeout(()=>blip(980,.09,.07),130);setTimeout(()=>blip(760,.12,.07),260)}roomAppend("Sistema",($("#room-nick").value.trim()||"visitante_2000")+" mandou um ZUMBIDO!",true);toast("Bzzzt! Zumbido na sala de demonstração.");setTimeout(()=>roomLog.classList.remove("room-nudge"),650)});
   const moodKey="webzone-mood-original";
   const savedMood=storage.get(moodKey,{face:"ツ",label:"ツ"});
